@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CivilDefenceUkraineBackendApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CivilDefenceUkraineBackendApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CivilDefenceUkraineBackendApplication.class, args);
+    }
 
 }

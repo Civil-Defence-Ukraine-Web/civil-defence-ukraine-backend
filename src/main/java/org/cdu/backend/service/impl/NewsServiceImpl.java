@@ -1,5 +1,6 @@
 package org.cdu.backend.service.impl;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.cdu.backend.dto.news.NewsCreateRequestDto;
 import org.cdu.backend.dto.news.NewsResponseDto;
@@ -11,10 +12,9 @@ import org.cdu.backend.model.News;
 import org.cdu.backend.repository.news.NewsRepository;
 import org.cdu.backend.repository.news.NewsSpecificationBuilder;
 import org.cdu.backend.service.NewsService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +39,11 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsResponseDto> findAll() {
-        return newsMapper.toResponseDtoList(newsRepository.findAll());
+    public List<NewsResponseDto> findAll(Pageable pageable) {
+        return newsRepository.findAll(pageable)
+                .stream()
+                .map(newsMapper::toResponseDto)
+                .toList();
     }
 
     @Override

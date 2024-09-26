@@ -19,12 +19,12 @@ public class NewsSpecificationBuilder implements SpecificationBuilder<News> {
     public Specification<News> build(NewsSearchParameters searchParameters) {
         Specification<News> specification = Specification.where(null);
 
-        if(searchParameters.title() != null) {
+        if (searchParameters.title() != null) {
             specification = specification.and(specificationProviderManager
                             .getSpecificationProvider(TitleSpecificationProvider.KEY_TITLE)
                             .getSpecification(searchParameters.title()));
         }
-        if(searchParameters.type() != null) {
+        if (searchParameters.type() != null) {
             specification = specification.and(specificationProviderManager
                             .getSpecificationProvider(TypeSpecificationProvider.KEY_TYPE)
                             .getSpecification(String.valueOf(searchParameters.type())));

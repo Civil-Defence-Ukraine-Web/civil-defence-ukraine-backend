@@ -1,13 +1,12 @@
 package org.cdu.backend.repository.news;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.cdu.backend.exception.KeyNotFoundException;
 import org.cdu.backend.model.News;
 import org.cdu.backend.repository.SpecificationProvider;
 import org.cdu.backend.repository.SpecificationProviderManager;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Component
