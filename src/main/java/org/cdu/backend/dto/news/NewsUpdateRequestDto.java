@@ -1,8 +1,7 @@
 package org.cdu.backend.dto.news;
 
-import jakarta.validation.constraints.NotBlank;
 import org.cdu.backend.model.News;
 
-public record NewsUpdateRequestDto(@NotBlank String title, @NotBlank String text,
-                                   String image, @NotBlank News.NewsType type) {
+public record NewsUpdateRequestDto(String title, String text,
+                                   String image, News.NewsType type) {
 }
