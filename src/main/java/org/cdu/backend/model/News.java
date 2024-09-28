@@ -31,8 +31,9 @@ public class News {
     @Column(nullable = false)
     private String text;
     @Column(nullable = false)
-    private LocalDateTime date = LocalDateTime.now();
+    private LocalDateTime publicationDate = LocalDateTime.now();
     private String image;
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private NewsType type;
     @Column(nullable = false, columnDefinition = "tinyint")
