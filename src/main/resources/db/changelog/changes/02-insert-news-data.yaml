@@ -1,0 +1,89 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-news-data
+      author: trayvor
+      changes:
+        - insert:
+            tableName: news
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: title
+                  value: "News from Denmark"
+              - column:
+                  name: text
+                  value: "Good people truly make the world go round!
+                          We are incredibly grateful to the local hospital in Fredericia for once
+                          again supporting us with much-needed equipment, and to our amazing
+                          supporters who helped Jurij load everything this morning
+                          The wheelchairs, medications, and sanitary supplies are now on
+                           their way to Ukraine."
+              - column:
+                  name: publication_date
+                  valueDate: "2024-09-28T12:00:00"
+              - column:
+                  name: image
+                  value: "news_image_1.jpg"
+              - column:
+                  name: type
+                  value: "NEWS"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+        - insert:
+            tableName: news
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: title
+                  value: "Report electricity"
+              - column:
+                  name: text
+                  value: "Dear followers, together with you we supported 73 окремий батальйон 
+                          Територіальної оборони Закарпаття with a power station. 
+                          Thank you, and let’s keep doing! Together we are stronger Slava Ukraini!"
+              - column:
+                  name: publication_date
+                  valueDate: "2024-09-28T12:00:00"
+              - column:
+                  name: image
+                  value: "report_image_2.jpg"
+              - column:
+                  name: type
+                  value: "REPORT"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+        - insert:
+            tableName: news
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: title
+                  value: "Event Culture Day"
+              - column:
+                  name: text
+                  value: "It was a great honor for us at Civil Defense Ukraine to participate in the
+                          Ukrainian Culture Day charity event organized by Ukrainsk forening
+                          i Kolding. A big thank you to the organizers for hosting this event, 
+                          where over 250 guests enjoyed delicious food, listened to Ukrainian music,
+                          socialized, and made different memorable purchases
+                          to support our defenders."
+              - column:
+                  name: publication_date
+                  valueDate: "2024-09-28T12:00:00"
+              - column:
+                  name: image
+                  value: "event_image_3.jpg"
+              - column:
+                  name: type
+                  value: "EVENT"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
