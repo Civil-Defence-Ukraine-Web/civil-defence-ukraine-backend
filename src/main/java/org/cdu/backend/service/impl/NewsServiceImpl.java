@@ -51,7 +51,6 @@ public class NewsServiceImpl implements NewsService {
         Specification<News> newsSpecification = specificationBuilder.build(searchParameters);
         List<News> newsList = newsRepository.findAll(newsSpecification);
         return newsMapper.toResponseDtoList(newsList);
-
     }
 
     @Override

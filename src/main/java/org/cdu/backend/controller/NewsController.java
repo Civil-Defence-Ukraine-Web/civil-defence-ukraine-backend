@@ -54,7 +54,7 @@ public class NewsController {
     @Operation(summary = "Update news", description = "Update news by id and update "
             + "request body")
     @PutMapping("/{id}")
-    public NewsResponseDto update(@RequestBody @Valid NewsUpdateRequestDto requestDto,
+    public NewsResponseDto update(@RequestBody NewsUpdateRequestDto requestDto,
                                   @PathVariable Long id) {
         return newsService.update(id,requestDto);
     }
