@@ -1,12 +1,12 @@
 package org.cdu.backend.util;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import org.cdu.backend.dto.news.NewsCreateRequestDto;
 import org.cdu.backend.dto.news.NewsResponseDto;
 import org.cdu.backend.dto.news.NewsUpdateRequestDto;
 import org.cdu.backend.model.News;
 import org.cdu.backend.model.News.NewsType;
-
-import java.time.LocalDateTime;
 
 public class NewsUtil {
     public static final Long FIRST_NEWS_ID = 1L;
@@ -32,7 +32,6 @@ public class NewsUtil {
             LocalDateTime.parse("2024-09-28T12:00:00");
     public static final String THIRD_NEWS_IMAGE = "image_3.jpg";
     public static final NewsType THIRD_NEWS_TYPE = NewsType.EVENT;
-
 
     public static NewsCreateRequestDto createFirstNewsCreateRequestDto() {
         return new NewsCreateRequestDto(FIRST_NEWS_TITLE, FIRST_NEWS_TEXT, FIRST_NEWS_IMAGE,
@@ -78,5 +77,10 @@ public class NewsUtil {
     public static NewsResponseDto createThirdNewsResponseDto() {
         return new NewsResponseDto(THIRD_NEWS_ID, THIRD_NEWS_TITLE, THIRD_NEWS_TEXT,
                 THIRD_NEWS_IMAGE, THIRD_NEWS_PUBLICATION_DATE, THIRD_NEWS_TYPE);
+    }
+
+    public static List<NewsResponseDto> createThreeNewsDtoList() {
+        return List.of(createFirstNewsResponseDto(), createSecondNewsResponseDto(),
+                createThirdNewsResponseDto());
     }
 }

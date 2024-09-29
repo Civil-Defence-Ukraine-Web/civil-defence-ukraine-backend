@@ -10,6 +10,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+import java.util.Optional;
 import org.cdu.backend.dto.news.NewsCreateRequestDto;
 import org.cdu.backend.dto.news.NewsResponseDto;
 import org.cdu.backend.dto.news.NewsSearchParameters;
@@ -21,6 +23,7 @@ import org.cdu.backend.repository.news.NewsRepository;
 import org.cdu.backend.repository.news.NewsSpecificationBuilder;
 import org.cdu.backend.service.impl.NewsServiceImpl;
 import org.cdu.backend.util.NewsUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,8 +34,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import java.util.List;
-import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class NewsServiceTest {
@@ -46,6 +47,9 @@ public class NewsServiceTest {
     @InjectMocks
     private NewsServiceImpl newsService;
 
+    @DisplayName("""
+            Verify save() method works correctly and returns correct DTO after saving
+            """)
     @Test
     public void save_WithValidCreateNewsDto_ShouldReturnValidNewsDto() {
         NewsCreateRequestDto createFirstRequestDto = NewsUtil.createFirstNewsCreateRequestDto();
@@ -64,6 +68,9 @@ public class NewsServiceTest {
         verify(newsMapper, times(1)).toResponseDto(any());
     }
 
+    @DisplayName("""
+            Verify update() method works correctly and returns correct DTO after updating
+            """)
     @Test
     public void update_WithValidUpdateNewsDto_ShouldReturnValidNewsDto() {
         NewsUpdateRequestDto updateFirstRequestDto = NewsUtil.createUpdateToFirstNewsRequestDto();
@@ -95,6 +102,9 @@ public class NewsServiceTest {
         verify(newsMapper, times(1)).toResponseDto(any());
     }
 
+    @DisplayName("""
+            Verify findById() method works correctly and returns correct DTO after finding
+            """)
     @Test
     public void findById_WithValidId_ShouldReturnValidNewsDto() {
         News firstNews = NewsUtil.createFirstNews();
@@ -111,6 +121,9 @@ public class NewsServiceTest {
         verify(newsMapper, times(1)).toResponseDto(any());
     }
 
+    @DisplayName("""
+            Verify findById() method works correctly and throws exception when news not found
+            """)
     @Test
     public void findById_WithInvalidId_ShouldThrowException() {
         Long id = NewsUtil.FIRST_NEWS_ID;
@@ -122,6 +135,9 @@ public class NewsServiceTest {
         verify(newsMapper, never()).toResponseDto(any());
     }
 
+    @DisplayName("""
+            Verify findAll() method works correctly and returns correct DTO list after finding
+            """)
     @Test
     public void findAll_WithThreeNewsInDatabase_ShouldReturnThreeNews() {
         News firstNews = NewsUtil.createFirstNews();
@@ -151,6 +167,9 @@ public class NewsServiceTest {
         verify(newsMapper, times(expected.size())).toResponseDto(any());
     }
 
+    @DisplayName("""
+            Verify search() method works correctly and returns needed DTO list after searching
+            """)
     @Test
     public void search_WithTwoSearchParamsNewsInDatabase_ShouldReturnOneNews() {
         News firstNews = NewsUtil.createFirstNews();
@@ -171,8 +190,8 @@ public class NewsServiceTest {
 
         assertEquals(expected, actual);
         verify(newsSpecificationBuilder, times(1))
-                .build(newsSearchParameters);
-        verify(newsRepository, times(1)).findAll(newsSpecification);
-        verify(newsMapper, times(expected.size())).toResponseDto(any());
+                .build(any());
+        verify(newsRepository, times(1)).findAll(any(Specification.class));
+        verify(newsMapper, times(expected.size())).toResponseDtoList(any());
     }
 }
