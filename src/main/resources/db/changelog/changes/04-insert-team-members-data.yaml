@@ -1,0 +1,145 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-team-members-data
+      author: trayvor
+      changes:
+        - insert:
+            tableName: team_members
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: "1"
+              - column:
+                  name: name
+                  value: "John Doe"
+              - column:
+                  name: position
+                  value: "CEO"
+              - column:
+                  name: description
+                  value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at 
+                          pretium velit. Vestibulum ut auctor sem. Nunc vel orci tincidunt, laoreet
+                          nisivolutpat, porttitor felis. Phasellus tincidunt, ante et faucibus 
+                          cursus, dui ipsum iaculis diam, sit amet mattis erat ante."
+              - column:
+                  name: image
+                  value: "team_image_1.jpg"
+              - column:
+                  name: is_deleted
+                  valueBoolean: "false"
+
+        - insert:
+            tableName: team_members
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: "2"
+              - column:
+                  name: name
+                  value: "Jane Smith"
+              - column:
+                  name: position
+                  value: "Marketing Manager"
+              - column:
+                  name: description
+                  value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a 
+                          tellus nec erat viverra vehicula. Nulla facilisi. Nullam at 
+                          nulla justo, eget luctus turpis."
+              - column:
+                  name: image
+                  value: "team_image_2.jpg"
+              - column:
+                  name: is_deleted
+                  valueBoolean: "false"
+
+        - insert:
+            tableName: team_members
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: "3"
+              - column:
+                  name: name
+                  value: "Michael Johnson"
+              - column:
+                  name: position
+                  value: "Software Engineer"
+              - column:
+                  name: description
+                  value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer 
+                          posuere erat a ante."
+              - column:
+                  name: image
+                  value: "team_image_3.jpg"
+              - column:
+                  name: is_deleted
+                  valueBoolean: "false"
+
+        - insert:
+            tableName: team_members
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: "4"
+              - column:
+                  name: name
+                  value: "Emily Davis"
+              - column:
+                  name: position
+                  value: "UI/UX Designer"
+              - column:
+                  name: description
+                  value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla 
+                          pulvinar massa et nunc commodo, ac facilisis arcu sollicitudin."
+              - column:
+                  name: image
+                  value: "team_image_4.jpg"
+              - column:
+                  name: is_deleted
+                  valueBoolean: "false"
+
+        - insert:
+            tableName: team_members
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: "5"
+              - column:
+                  name: name
+                  value: "David Lee"
+              - column:
+                  name: position
+                  value: "Customer Support Specialist"
+              - column:
+                  name: description
+                  value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque 
+                          varius quam id erat porttitor, eget elementum tortor euismod."
+              - column:
+                  name: image
+                  value: "team_image_5.jpg"
+              - column:
+                  name: is_deleted
+                  valueBoolean: "false"
+
+        - insert:
+            tableName: team_members
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: "6"
+              - column:
+                  name: name
+                  value: "Sarah Kim"
+              - column:
+                  name: position
+                  value: "Sales Representative"
+              - column:
+                  name: description
+                  value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec 
+                          ultrices tincidunt arcu, sit amet cursus nunc commodo a."
+              - column:
+                  name: image
+                  value: "team_image_6.jpg"
+              - column:
+                  name: is_deleted
+                  valueBoolean: "false"

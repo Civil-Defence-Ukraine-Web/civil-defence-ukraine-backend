@@ -14,10 +14,11 @@ import java.util.Arrays;
 import java.util.List;
 import javax.sql.DataSource;
 import lombok.SneakyThrows;
-import org.cdu.backend.dto.news.NewsCreateRequestDto;
-import org.cdu.backend.dto.news.NewsResponseDto;
-import org.cdu.backend.dto.news.NewsUpdateRequestDto;
-import org.cdu.backend.util.NewsUtil;
+import org.cdu.backend.dto.team.member.TeamMemberCreateRequestDto;
+import org.cdu.backend.dto.team.member.TeamMemberResponseDto;
+import org.cdu.backend.dto.team.member.TeamMemberUpdateRequestDto;
+import org.cdu.backend.model.TeamMember;
+import org.cdu.backend.util.TeamMemberUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,12 +35,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class NewsControllerTest {
+public class TeamMemberControllerTest {
     protected static MockMvc mockMvc;
 
-    private static final String BASIC_URL_ENDPOINT = "/news";
-    private static final String SEARCH_PARAM_TITLE = "title";
-    private static final String SEARCH_PARAM_TYPE = "type";
+    private static final String BASIC_URL_ENDPOINT = "/team";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -65,7 +64,8 @@ public class NewsControllerTest {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
                     connection,
-                    new ClassPathResource("database/news/add-three-news-to-database.sql")
+                    new ClassPathResource(
+                            "database/team/member/add-three-team-members-to-database.sql")
             );
         }
     }
@@ -76,35 +76,37 @@ public class NewsControllerTest {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
                     connection,
-                    new ClassPathResource("database/news/delete-news-from-database.sql")
+                    new ClassPathResource(
+                            "database/team/member/delete-team-members-from-database.sql")
             );
         }
     }
 
     @DisplayName("""
-            Verify findAll endpoint works correctly and returns correct DTO list
+            Verify findAll endpoint works correctly and returns all members
             """)
     @Test
-    void findAll_GivenNews_ShouldReturnAllNews() throws Exception {
-        List<NewsResponseDto> expected = NewsUtil.createThreeNewsDtoList();
+    void findAll_GivenTeamMembers_ShouldReturnAllTeamMembers() throws Exception {
+        List<TeamMemberResponseDto> expected = TeamMemberUtil.createTeamMemberResponseDtoList();
 
         MvcResult result = mockMvc.perform(
                         get(BASIC_URL_ENDPOINT).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        NewsResponseDto[] actual = objectMapper
-                .readValue(result.getResponse().getContentAsByteArray(), NewsResponseDto[].class);
+        TeamMemberResponseDto[] actual = objectMapper
+                .readValue(result.getResponse().getContentAsByteArray(),
+                        TeamMemberResponseDto[].class);
         assertEquals(expected.size(), actual.length);
         assertEquals(expected, Arrays.stream(actual).toList());
     }
 
     @DisplayName("""
-            Verify findById endpoint works correctly end returns correct DTO
+            Verify findById endpoint works correctly and returns correct team member
             """)
     @Test
-    void findById_WithValidId_ShouldReturnCorrectNews() throws Exception {
-        NewsResponseDto expected = NewsUtil.createFirstNewsResponseDto();
+    void findById_WithValidId_ShouldReturnCorrectTeamMember() throws Exception {
+        TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
 
         MvcResult result = mockMvc.perform(
                         get(BASIC_URL_ENDPOINT + "/" + expected.id())
@@ -112,82 +114,60 @@ public class NewsControllerTest {
                 ).andExpect(status().isOk())
                 .andReturn();
 
-        NewsResponseDto actual = objectMapper
-                .readValue(result.getResponse().getContentAsByteArray(), NewsResponseDto.class);
+        TeamMemberResponseDto actual = objectMapper
+                .readValue(result.getResponse().getContentAsByteArray(),
+                        TeamMemberResponseDto.class);
         assertEquals(expected, actual);
     }
 
     @DisplayName("""
-            Verify search endpoint works correctly and returns correct DTO list with params
+            Verify save endpoint works correctly, saves and returns correct team member
             """)
     @Test
-    void search_WithValidSearchParams_ShouldReturnFirstNews() throws Exception {
-        List<NewsResponseDto> expected = List.of(NewsUtil.createFirstNewsResponseDto());
-
-        MvcResult result = mockMvc.perform(
-                        get(BASIC_URL_ENDPOINT + "/search")
-                                .param(SEARCH_PARAM_TITLE, expected.getFirst().title())
-                                .param(SEARCH_PARAM_TYPE, expected.getFirst().type().toString())
-                                .contentType(MediaType.APPLICATION_JSON)
-                ).andExpect(status().isOk())
-                .andReturn();
-
-        NewsResponseDto[] actual = objectMapper
-                .readValue(result.getResponse().getContentAsByteArray(), NewsResponseDto[].class);
-        assertEquals(expected.size(), actual.length);
-        assertEquals(expected, Arrays.stream(actual).toList());
-    }
-
-    @DisplayName("""
-            Verify save endpoint works correctly and returns correct DTO
-            """)
-    @Test
-    void save_ValidCreateDto_ShouldReturnCorrectNewsDto() throws Exception {
-        NewsCreateRequestDto createRequestDto = NewsUtil.createFirstNewsCreateRequestDto();
-        NewsResponseDto expected = NewsUtil.createFirstNewsResponseDto();
+    void save_ValidCreateDto_ShouldReturnCorrectTeamMemberDto() throws Exception {
+        TeamMemberCreateRequestDto requestDto = TeamMemberUtil.createFirstMemberCreateRequestDto();
+        TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
 
         MvcResult result = mockMvc.perform(
                         post(BASIC_URL_ENDPOINT)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(createRequestDto))
+                                .content(objectMapper.writeValueAsString(requestDto))
                 ).andExpect(status().isOk())
                 .andReturn();
-
-        NewsResponseDto actual = objectMapper
-                .readValue(result.getResponse().getContentAsByteArray(), NewsResponseDto.class);
-        reflectionEquals(expected, actual, "id", "publicationDate");
-    }
-
-    @DisplayName("""
-            Verify update endpoint works correctly, updates and returns correct DTO
-            """)
-    @Test
-    void update_ValidIdAndUpdateDto_ShouldReturnCorrectNewsDto() throws Exception {
-        NewsResponseDto expected = NewsUtil.createFirstNewsResponseDto();
-        NewsUpdateRequestDto updateToFirstNewsRequestDto =
-                NewsUtil.createUpdateToFirstNewsRequestDto();
-
-        MvcResult result = mockMvc.perform(
-                        put(BASIC_URL_ENDPOINT + "/2")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper
-                                        .writeValueAsString(updateToFirstNewsRequestDto))
-                ).andExpect(status().isOk())
-                .andReturn();
-
-        NewsResponseDto actual = objectMapper
-                .readValue(result.getResponse().getContentAsByteArray(), NewsResponseDto.class);
+        TeamMemberResponseDto actual =
+                objectMapper.readValue(result.getResponse().getContentAsByteArray(),
+                        TeamMemberResponseDto.class);
         reflectionEquals(expected, actual, "id");
     }
 
     @DisplayName("""
-            Verify delete endpoint works correctly with success status code
+            Verify update endpoint works correctly, updates and returns correct team member
             """)
     @Test
-    void delete_ValidId_ShouldReturnSuccess() throws Exception {
-        NewsResponseDto newsToDelete = NewsUtil.createFirstNewsResponseDto();
-        mockMvc.perform(delete(BASIC_URL_ENDPOINT + "/" + newsToDelete.id())
-                        .contentType(MediaType.APPLICATION_JSON)
+    void update_WithValidIdAndUpdateDto_ShouldReturnCorrectTeamMemberDto() throws Exception {
+        TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
+        TeamMemberUpdateRequestDto requestDto = TeamMemberUtil.createFirstMemberUpdateRequestDto();
+
+        MvcResult result = mockMvc.perform(
+                        put(BASIC_URL_ENDPOINT + "/2")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestDto))
+                ).andExpect(status().isOk())
+                .andReturn();
+        TeamMemberResponseDto actual =
+                objectMapper.readValue(result.getResponse().getContentAsByteArray(),
+                        TeamMemberResponseDto.class);
+        reflectionEquals(expected, actual, "id");
+    }
+
+    @DisplayName("""
+            Verify delete endpoint works correctly and returns success code
+            """)
+    @Test
+    void delete_WithValidId_ShouldReturnSuccess() throws Exception {
+        TeamMember memberToDelete = TeamMemberUtil.createFirstTeamMember();
+        mockMvc.perform(delete(BASIC_URL_ENDPOINT + "/" + memberToDelete.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();
     }
