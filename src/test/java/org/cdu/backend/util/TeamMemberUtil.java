@@ -1,11 +1,10 @@
 package org.cdu.backend.util;
 
+import java.util.List;
 import org.cdu.backend.dto.team.member.TeamMemberCreateRequestDto;
 import org.cdu.backend.dto.team.member.TeamMemberResponseDto;
 import org.cdu.backend.dto.team.member.TeamMemberUpdateRequestDto;
 import org.cdu.backend.model.TeamMember;
-
-import java.util.List;
 
 public class TeamMemberUtil {
     public static final Long FIRST_MEMBER_ID = 1L;

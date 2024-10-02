@@ -1,5 +1,6 @@
 package org.cdu.backend.controller;
 
+import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -13,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 import javax.sql.DataSource;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.cdu.backend.dto.news.NewsCreateRequestDto;
 import org.cdu.backend.dto.news.NewsResponseDto;
 import org.cdu.backend.dto.news.NewsUpdateRequestDto;
@@ -155,7 +155,7 @@ public class NewsControllerTest {
 
         NewsResponseDto actual = objectMapper
                 .readValue(result.getResponse().getContentAsByteArray(), NewsResponseDto.class);
-        EqualsBuilder.reflectionEquals(expected, actual, "id", "publicationDate");
+        reflectionEquals(expected, actual, "id", "publicationDate");
     }
 
     @DisplayName("""
@@ -177,7 +177,7 @@ public class NewsControllerTest {
 
         NewsResponseDto actual = objectMapper
                 .readValue(result.getResponse().getContentAsByteArray(), NewsResponseDto.class);
-        EqualsBuilder.reflectionEquals(expected, actual, "id");
+        reflectionEquals(expected, actual, "id");
     }
 
     @DisplayName("""
