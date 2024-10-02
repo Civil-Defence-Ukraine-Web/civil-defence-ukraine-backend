@@ -23,7 +23,7 @@ public class TeamMemberServiceImpl implements TeamMemberService {
     public TeamMemberResponseDto save(TeamMemberCreateRequestDto requestDto) {
         TeamMember teamMember = teamMemberMapper.toModel(requestDto);
         teamMemberRepository.save(teamMember);
-        return teamMemberMapper.toDto(teamMember);
+        return teamMemberMapper.toResponseDto(teamMember);
     }
 
     @Override
@@ -32,21 +32,21 @@ public class TeamMemberServiceImpl implements TeamMemberService {
                 () -> new EntityNotFoundException("No team member found with id: " + id));
         teamMemberMapper.updateTeamMemberFromRequestDto(requestDto, teamMember);
         teamMemberRepository.save(teamMember);
-        return teamMemberMapper.toDto(teamMember);
+        return teamMemberMapper.toResponseDto(teamMember);
     }
 
     @Override
     public TeamMemberResponseDto findById(Long id) {
         TeamMember teamMember = teamMemberRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("No team member found with id: " + id));
-        return teamMemberMapper.toDto(teamMember);
+        return teamMemberMapper.toResponseDto(teamMember);
     }
 
     @Override
     public List<TeamMemberResponseDto> findAll(Pageable pageable) {
         return teamMemberRepository.findAll(pageable)
                 .stream()
-                .map(teamMemberMapper::toDto)
+                .map(teamMemberMapper::toResponseDto)
                 .toList();
     }
 

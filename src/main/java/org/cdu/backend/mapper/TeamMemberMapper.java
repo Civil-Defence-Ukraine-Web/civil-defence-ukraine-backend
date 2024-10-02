@@ -12,7 +12,7 @@ import org.mapstruct.MappingTarget;
 public interface TeamMemberMapper {
     TeamMember toModel(TeamMemberCreateRequestDto requestDto);
 
-    TeamMemberResponseDto toDto(TeamMember teamMember);
+    TeamMemberResponseDto toResponseDto(TeamMember teamMember);
 
     void updateTeamMemberFromRequestDto(TeamMemberUpdateRequestDto requestDto,
                                         @MappingTarget TeamMember teamMember);
