@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "News management", description = "Endpoint for news management")
 @RequiredArgsConstructor
@@ -49,16 +50,21 @@ public class NewsController {
 
     @Operation(summary = "Save news to database", description = "Save news to database")
     @PostMapping
-    public NewsResponseDto save(@RequestBody @Valid NewsCreateRequestDto requestDto) {
-        return newsService.save(requestDto);
+    public NewsResponseDto save(
+            @RequestPart("requestDto") @Valid NewsCreateRequestDto requestDto,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) {
+        return newsService.save(requestDto, image);
     }
 
     @Operation(summary = "Update news", description = "Update news by id and update "
             + "request body")
     @PutMapping("/{id}")
-    public NewsResponseDto update(@RequestBody NewsUpdateRequestDto requestDto,
-                                  @PathVariable Long id) {
-        return newsService.update(id,requestDto);
+    public NewsResponseDto update(
+            @RequestPart("requestDto") NewsUpdateRequestDto requestDto,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @PathVariable Long id) {
+        return newsService.update(id, requestDto, image);
     }
 
     @Operation(summary = "Delete news", description = "Delete news by id")

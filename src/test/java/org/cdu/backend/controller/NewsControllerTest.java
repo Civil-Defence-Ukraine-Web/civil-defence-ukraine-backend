@@ -1,14 +1,14 @@
 package org.cdu.backend.controller;
 
+import static java.lang.classfile.components.ClassPrinter.toJson;
 import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -146,12 +147,19 @@ public class NewsControllerTest {
         NewsCreateRequestDto createRequestDto = NewsUtil.createFirstNewsCreateRequestDto();
         NewsResponseDto expected = NewsUtil.createFirstNewsResponseDto();
 
+        MockMultipartFile imageFile = new MockMultipartFile("image_1",
+                "image_1.jpg", MediaType.IMAGE_JPEG_VALUE,
+                "test image".getBytes());
+
         MvcResult result = mockMvc.perform(
-                        post(BASIC_URL_ENDPOINT)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(createRequestDto))
+                        multipart(BASIC_URL_ENDPOINT)
+                                .file(imageFile)
+                                .part("requestDto",
+                                        toJson(expected).getBytes(StandardCharsets.UTF_8))
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
                 ).andExpect(status().isOk())
                 .andReturn();
+
 
         NewsResponseDto actual = objectMapper
                 .readValue(result.getResponse().getContentAsByteArray(), NewsResponseDto.class);
@@ -167,11 +175,16 @@ public class NewsControllerTest {
         NewsUpdateRequestDto updateToFirstNewsRequestDto =
                 NewsUtil.createUpdateToFirstNewsRequestDto();
 
+        MockMultipartFile imageFile = new MockMultipartFile("image_1",
+                "image_1.jpg", MediaType.IMAGE_JPEG_VALUE,
+                "updated test image".getBytes());
+
         MvcResult result = mockMvc.perform(
-                        put(BASIC_URL_ENDPOINT + "/2")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper
-                                        .writeValueAsString(updateToFirstNewsRequestDto))
+                        multipart(BASIC_URL_ENDPOINT + "/2")
+                                .file(imageFile)
+                                .file("requestDto",
+                                        objectMapper.writeValueAsBytes(updateToFirstNewsRequestDto))
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
                 ).andExpect(status().isOk())
                 .andReturn();
 

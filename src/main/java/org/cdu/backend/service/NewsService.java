@@ -6,9 +6,10 @@ import org.cdu.backend.dto.news.NewsResponseDto;
 import org.cdu.backend.dto.news.NewsSearchParameters;
 import org.cdu.backend.dto.news.NewsUpdateRequestDto;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface NewsService {
-    NewsResponseDto save(NewsCreateRequestDto requestDto);
+    NewsResponseDto save(NewsCreateRequestDto requestDto, MultipartFile image);
 
     NewsResponseDto findById(Long id);
 
@@ -16,7 +17,7 @@ public interface NewsService {
 
     List<NewsResponseDto> search(NewsSearchParameters searchParameters);
 
-    NewsResponseDto update(Long id, NewsUpdateRequestDto requestDto);
+    NewsResponseDto update(Long id, NewsUpdateRequestDto requestDto, MultipartFile image);
 
     void deleteById(Long id);
 }
