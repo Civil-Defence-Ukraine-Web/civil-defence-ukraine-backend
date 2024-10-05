@@ -11,6 +11,7 @@ import org.cdu.backend.dto.news.NewsSearchParameters;
 import org.cdu.backend.dto.news.NewsUpdateRequestDto;
 import org.cdu.backend.service.NewsService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +50,7 @@ public class NewsController {
     }
 
     @Operation(summary = "Save news to database", description = "Save news to database")
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public NewsResponseDto save(
             @RequestPart("requestDto") @Valid NewsCreateRequestDto requestDto,
             @RequestPart(value = "image", required = false) MultipartFile image
@@ -59,7 +60,7 @@ public class NewsController {
 
     @Operation(summary = "Update news", description = "Update news by id and update "
             + "request body")
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public NewsResponseDto update(
             @RequestPart("requestDto") NewsUpdateRequestDto requestDto,
             @RequestPart(value = "image", required = false) MultipartFile image,

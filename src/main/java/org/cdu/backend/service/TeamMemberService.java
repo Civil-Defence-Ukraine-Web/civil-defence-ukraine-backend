@@ -5,11 +5,13 @@ import org.cdu.backend.dto.team.member.TeamMemberCreateRequestDto;
 import org.cdu.backend.dto.team.member.TeamMemberResponseDto;
 import org.cdu.backend.dto.team.member.TeamMemberUpdateRequestDto;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface TeamMemberService {
-    TeamMemberResponseDto save(TeamMemberCreateRequestDto requestDto);
+    TeamMemberResponseDto save(TeamMemberCreateRequestDto requestDto, MultipartFile image);
 
-    TeamMemberResponseDto update(Long id, TeamMemberUpdateRequestDto requestDto);
+    TeamMemberResponseDto update(Long id, TeamMemberUpdateRequestDto requestDto,
+                                 MultipartFile image);
 
     TeamMemberResponseDto findById(Long id);
 

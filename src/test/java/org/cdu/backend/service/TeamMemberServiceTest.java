@@ -29,6 +29,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 public class TeamMemberServiceTest {
@@ -48,12 +50,13 @@ public class TeamMemberServiceTest {
         TeamMemberCreateRequestDto requestDto = TeamMemberUtil.createFirstMemberCreateRequestDto();
         TeamMember teamMember = TeamMemberUtil.createFirstTeamMember();
         TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
+        MultipartFile image = new MockMultipartFile("image", (byte[]) null);
 
         when(teamMemberMapper.toModel(requestDto)).thenReturn(teamMember);
         when(teamMemberRepository.save(teamMember)).thenReturn(teamMember);
         when(teamMemberMapper.toResponseDto(teamMember)).thenReturn(expected);
 
-        TeamMemberResponseDto result = teamMemberService.save(requestDto);
+        TeamMemberResponseDto result = teamMemberService.save(requestDto, image);
 
         assertEquals(expected, result);
         verify(teamMemberRepository, times(1)).save(any());
@@ -69,6 +72,7 @@ public class TeamMemberServiceTest {
         TeamMemberUpdateRequestDto requestDto = TeamMemberUtil.createFirstMemberUpdateRequestDto();
         TeamMember secondTeamMember = TeamMemberUtil.createSecondTeamMember();
         TeamMemberResponseDto expected = TeamMemberUtil.createSecondMemberResponseDto();
+        MultipartFile image = new MockMultipartFile("image", (byte[]) null);
 
         when(teamMemberRepository.findById(secondTeamMember.getId()))
                 .thenReturn(Optional.of(secondTeamMember));
@@ -80,7 +84,6 @@ public class TeamMemberServiceTest {
             invocationTeamMember.setName(invocationUpdateDto.name());
             invocationTeamMember.setPosition(invocationUpdateDto.position());
             invocationTeamMember.setDescription(invocationUpdateDto.description());
-            invocationTeamMember.setImage(invocationUpdateDto.image());
 
             return null;
         }).when(teamMemberMapper).updateTeamMemberFromRequestDto(requestDto, secondTeamMember);
@@ -88,7 +91,7 @@ public class TeamMemberServiceTest {
         when(teamMemberMapper.toResponseDto(secondTeamMember)).thenReturn(expected);
 
         TeamMemberResponseDto result =
-                teamMemberService.update(secondTeamMember.getId(), requestDto);
+                teamMemberService.update(secondTeamMember.getId(), requestDto, image);
         assertEquals(expected, result);
         verify(teamMemberRepository, times(1)).findById(any());
         verify(teamMemberMapper, times(1))

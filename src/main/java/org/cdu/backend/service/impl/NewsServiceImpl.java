@@ -29,7 +29,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public NewsResponseDto save(NewsCreateRequestDto requestDto, MultipartFile image) {
         News news = newsMapper.toModel(requestDto);
-        String imageUrl = imageService.save(image);
+        String imageUrl = imageService.save(image, DropboxImageServiceImpl.ImageType.NEWS_IMAGE);
         news.setImage(imageUrl);
         newsRepository.save(news);
         return newsMapper.toResponseDto(news);
@@ -65,7 +65,8 @@ public class NewsServiceImpl implements NewsService {
         );
         newsMapper.updateNewsFromRequestDto(requestDto, news);
         if (!image.isEmpty()) {
-            String imageUrl = imageService.save(image);
+            String imageUrl =
+                    imageService.save(image, DropboxImageServiceImpl.ImageType.NEWS_IMAGE);
             news.setImage(imageUrl);
         }
         newsRepository.save(news);

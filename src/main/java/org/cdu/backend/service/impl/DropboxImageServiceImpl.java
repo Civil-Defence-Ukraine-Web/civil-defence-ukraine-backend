@@ -2,7 +2,6 @@ package org.cdu.backend.service.impl;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
-import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,21 +18,31 @@ import org.springframework.web.multipart.MultipartFile;
 public class DropboxImageServiceImpl implements ImageService {
     @Value("${dropbox.news.folder}")
     private String newsFolderPath;
+    @Value("${dropbox.team.member.folder}")
+    private String teamMemberFolderPath;
 
     private final DropboxAuthService dropboxAuthService;
 
     @Override
-    public String save(MultipartFile image) {
+    public String save(MultipartFile image, ImageType type) {
         if (image.isEmpty()) {
             return null;
         }
 
-        String dropboxImagePath = newsFolderPath + "/" + image.getOriginalFilename();
+        String dropboxImagePath = "";
+
+        if (type == ImageType.NEWS_IMAGE) {
+            dropboxImagePath = "/" + newsFolderPath + "/" + image.getOriginalFilename();
+        }
+        if (type == ImageType.TEAM_MEMBER_IMAGE) {
+            dropboxImagePath = "/" + teamMemberFolderPath + "/" + image.getOriginalFilename();
+        }
+
         DbxClientV2 client = dropboxAuthService.getDbxClient();
         SharedLinkMetadata dropboxImageLink;
 
         try (InputStream inputStream = image.getInputStream()) {
-            FileMetadata metadata = client.files()
+            client.files()
                     .uploadBuilder(dropboxImagePath)
                     .uploadAndFinish(inputStream);
         } catch (IOException | DbxException e) {
@@ -48,5 +57,10 @@ public class DropboxImageServiceImpl implements ImageService {
         }
 
         return dropboxImageLink.getUrl();
+    }
+
+    public enum ImageType {
+        NEWS_IMAGE,
+        TEAM_MEMBER_IMAGE
     }
 }

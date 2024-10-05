@@ -1,5 +1,6 @@
 package org.cdu.backend.service;
 
+import static org.cdu.backend.service.impl.DropboxImageServiceImpl.ImageType.NEWS_IMAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
@@ -65,7 +66,7 @@ public class NewsServiceTest {
         when(newsMapper.toModel(createFirstRequestDto)).thenReturn(firstNews);
         when(newsRepository.save(firstNews)).thenReturn(firstNews);
         when(newsMapper.toResponseDto(firstNews)).thenReturn(firstNewsResponseDto);
-        when(dropboxImageService.save(image)).thenReturn(firstNewsResponseDto.image());
+        when(dropboxImageService.save(image, NEWS_IMAGE)).thenReturn(firstNewsResponseDto.image());
 
         NewsResponseDto result = newsService.save(createFirstRequestDto, image);
 
@@ -73,7 +74,7 @@ public class NewsServiceTest {
         verify(newsMapper, times(1)).toModel(any());
         verify(newsRepository, times(1)).save(any());
         verify(newsMapper, times(1)).toResponseDto(any());
-        verify(dropboxImageService, times(1)).save(any());
+        verify(dropboxImageService, times(1)).save(any(), NEWS_IMAGE);
     }
 
     @DisplayName("""
@@ -100,7 +101,6 @@ public class NewsServiceTest {
         }).when(newsMapper).updateNewsFromRequestDto(updateFirstRequestDto, secondNews);
         when(newsRepository.save(secondNews)).thenReturn(secondNews);
         when(newsMapper.toResponseDto(secondNews)).thenReturn(secondNewsResponseDto);
-        when(dropboxImageService.save(image)).thenReturn(secondNewsResponseDto.image());
 
         NewsResponseDto result = newsService.update(secondNews.getId(), updateFirstRequestDto,
                 image);

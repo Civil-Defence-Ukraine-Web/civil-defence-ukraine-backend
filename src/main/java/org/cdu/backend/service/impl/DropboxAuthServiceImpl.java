@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class DropboxAuthServiceImpl implements DropboxAuthService {
     @Value("${dropbox.app.name}")
     private String appName;
-    @Value("@{dropbox.app.key}")
+    @Value("${dropbox.app.key}")
     private String appKey;
     @Value("${dropbox.app.secret}")
     private String appSecret;

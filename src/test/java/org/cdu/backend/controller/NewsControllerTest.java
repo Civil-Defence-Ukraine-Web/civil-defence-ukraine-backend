@@ -1,14 +1,13 @@
 package org.cdu.backend.controller;
 
-import static java.lang.classfile.components.ClassPrinter.toJson;
 import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.List;
@@ -17,15 +16,19 @@ import lombok.SneakyThrows;
 import org.cdu.backend.dto.news.NewsCreateRequestDto;
 import org.cdu.backend.dto.news.NewsResponseDto;
 import org.cdu.backend.dto.news.NewsUpdateRequestDto;
+import org.cdu.backend.service.impl.DropboxImageServiceImpl;
 import org.cdu.backend.util.NewsUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.mock.web.MockMultipartFile;
@@ -44,6 +47,9 @@ public class NewsControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private DropboxImageServiceImpl imageService;
 
     @BeforeAll
     public static void setUp(@Autowired WebApplicationContext webApplicationContext,
@@ -147,19 +153,26 @@ public class NewsControllerTest {
         NewsCreateRequestDto createRequestDto = NewsUtil.createFirstNewsCreateRequestDto();
         NewsResponseDto expected = NewsUtil.createFirstNewsResponseDto();
 
-        MockMultipartFile imageFile = new MockMultipartFile("image_1",
+        MockMultipartFile imageFile = new MockMultipartFile("image",
                 "image_1.jpg", MediaType.IMAGE_JPEG_VALUE,
                 "test image".getBytes());
 
+        Mockito.when(imageService.save(imageFile, DropboxImageServiceImpl.ImageType.NEWS_IMAGE))
+                .thenReturn(imageFile.getOriginalFilename());
+
+        MockMultipartFile jsonPart = new MockMultipartFile(
+                "requestDto",
+                "requestDto",
+                MediaType.APPLICATION_JSON_VALUE,
+                objectMapper.writeValueAsBytes(createRequestDto));
+
         MvcResult result = mockMvc.perform(
-                        multipart(BASIC_URL_ENDPOINT)
+                        multipart(HttpMethod.POST, BASIC_URL_ENDPOINT)
                                 .file(imageFile)
-                                .part("requestDto",
-                                        toJson(expected).getBytes(StandardCharsets.UTF_8))
+                                .file(jsonPart)
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 ).andExpect(status().isOk())
                 .andReturn();
-
 
         NewsResponseDto actual = objectMapper
                 .readValue(result.getResponse().getContentAsByteArray(), NewsResponseDto.class);
@@ -175,15 +188,23 @@ public class NewsControllerTest {
         NewsUpdateRequestDto updateToFirstNewsRequestDto =
                 NewsUtil.createUpdateToFirstNewsRequestDto();
 
-        MockMultipartFile imageFile = new MockMultipartFile("image_1",
+        MockMultipartFile imageFile = new MockMultipartFile("image",
                 "image_1.jpg", MediaType.IMAGE_JPEG_VALUE,
                 "updated test image".getBytes());
 
+        Mockito.when(imageService.save(imageFile, DropboxImageServiceImpl.ImageType.NEWS_IMAGE))
+                .thenReturn(imageFile.getOriginalFilename());
+
+        MockMultipartFile jsonPart = new MockMultipartFile(
+                "requestDto",
+                "requestDto",
+                MediaType.APPLICATION_JSON_VALUE,
+                objectMapper.writeValueAsBytes(updateToFirstNewsRequestDto));
+
         MvcResult result = mockMvc.perform(
-                        multipart(BASIC_URL_ENDPOINT + "/2")
+                        multipart(HttpMethod.PUT, BASIC_URL_ENDPOINT + "/2")
                                 .file(imageFile)
-                                .file("requestDto",
-                                        objectMapper.writeValueAsBytes(updateToFirstNewsRequestDto))
+                                .file(jsonPart)
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 ).andExpect(status().isOk())
                 .andReturn();
