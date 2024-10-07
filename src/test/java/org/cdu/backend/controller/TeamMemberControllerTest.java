@@ -139,7 +139,8 @@ public class TeamMemberControllerTest {
                 "team_image_1.jpg", MediaType.IMAGE_JPEG_VALUE,
                 "test image".getBytes());
 
-        Mockito.when(imageService.save(imageFile, DropboxImageServiceImpl.ImageType.NEWS_IMAGE))
+        Mockito.when(imageService.save(imageFile,
+                        DropboxImageServiceImpl.ImageType.TEAM_MEMBER_IMAGE))
                 .thenReturn(imageFile.getOriginalFilename());
 
         MockMultipartFile jsonPart = new MockMultipartFile(
@@ -174,7 +175,8 @@ public class TeamMemberControllerTest {
                 "team_image_1.jpg", MediaType.IMAGE_JPEG_VALUE,
                 "test image".getBytes());
 
-        Mockito.when(imageService.save(imageFile, DropboxImageServiceImpl.ImageType.NEWS_IMAGE))
+        Mockito.when(imageService.save(imageFile,
+                        DropboxImageServiceImpl.ImageType.TEAM_MEMBER_IMAGE))
                 .thenReturn(imageFile.getOriginalFilename());
 
         MockMultipartFile jsonPart = new MockMultipartFile(

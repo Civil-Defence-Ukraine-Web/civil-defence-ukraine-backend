@@ -18,6 +18,7 @@ import org.cdu.backend.exception.EntityNotFoundException;
 import org.cdu.backend.mapper.TeamMemberMapper;
 import org.cdu.backend.model.TeamMember;
 import org.cdu.backend.repository.team.member.TeamMemberRepository;
+import org.cdu.backend.service.impl.DropboxImageServiceImpl;
 import org.cdu.backend.service.impl.TeamMemberServiceImpl;
 import org.cdu.backend.util.TeamMemberUtil;
 import org.junit.jupiter.api.DisplayName;
@@ -38,6 +39,8 @@ public class TeamMemberServiceTest {
     private TeamMemberRepository teamMemberRepository;
     @Mock
     private TeamMemberMapper teamMemberMapper;
+    @Mock
+    private DropboxImageServiceImpl dropboxImageService;
 
     @InjectMocks
     private TeamMemberServiceImpl teamMemberService;
@@ -49,12 +52,14 @@ public class TeamMemberServiceTest {
     void save_WithValidCreateRequestDto_ShouldReturnValidDto() {
         TeamMemberCreateRequestDto requestDto = TeamMemberUtil.createFirstMemberCreateRequestDto();
         TeamMember teamMember = TeamMemberUtil.createFirstTeamMember();
-        TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
         MultipartFile image = new MockMultipartFile("image", (byte[]) null);
+        TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
 
+        when(dropboxImageService.save(image, DropboxImageServiceImpl.ImageType.TEAM_MEMBER_IMAGE))
+                .thenReturn(image.getOriginalFilename());
+        when(teamMemberMapper.toResponseDto(teamMember)).thenReturn(expected);
         when(teamMemberMapper.toModel(requestDto)).thenReturn(teamMember);
         when(teamMemberRepository.save(teamMember)).thenReturn(teamMember);
-        when(teamMemberMapper.toResponseDto(teamMember)).thenReturn(expected);
 
         TeamMemberResponseDto result = teamMemberService.save(requestDto, image);
 
@@ -69,13 +74,14 @@ public class TeamMemberServiceTest {
             """)
     @Test
     void update_WithValidUpdateRequestDto_ShouldReturnValidDto() {
-        TeamMemberUpdateRequestDto requestDto = TeamMemberUtil.createFirstMemberUpdateRequestDto();
         TeamMember secondTeamMember = TeamMemberUtil.createSecondTeamMember();
-        TeamMemberResponseDto expected = TeamMemberUtil.createSecondMemberResponseDto();
         MultipartFile image = new MockMultipartFile("image", (byte[]) null);
+        TeamMemberResponseDto expected = TeamMemberUtil.createSecondMemberResponseDto();
+        TeamMemberUpdateRequestDto requestDto = TeamMemberUtil.createFirstMemberUpdateRequestDto();
 
-        when(teamMemberRepository.findById(secondTeamMember.getId()))
-                .thenReturn(Optional.of(secondTeamMember));
+        when(dropboxImageService.save(image, DropboxImageServiceImpl.ImageType.TEAM_MEMBER_IMAGE))
+                .thenReturn(image.getOriginalFilename());
+        when(teamMemberMapper.toResponseDto(secondTeamMember)).thenReturn(expected);
         doAnswer(invocationOnMock -> {
             TeamMemberUpdateRequestDto invocationUpdateDto =
                     (TeamMemberUpdateRequestDto) invocationOnMock.getArguments()[0];
@@ -87,8 +93,9 @@ public class TeamMemberServiceTest {
 
             return null;
         }).when(teamMemberMapper).updateTeamMemberFromRequestDto(requestDto, secondTeamMember);
+        when(teamMemberRepository.findById(secondTeamMember.getId()))
+                .thenReturn(Optional.of(secondTeamMember));
         when(teamMemberRepository.save(secondTeamMember)).thenReturn(secondTeamMember);
-        when(teamMemberMapper.toResponseDto(secondTeamMember)).thenReturn(expected);
 
         TeamMemberResponseDto result =
                 teamMemberService.update(secondTeamMember.getId(), requestDto, image);

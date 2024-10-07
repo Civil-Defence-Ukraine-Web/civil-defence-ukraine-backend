@@ -40,6 +40,8 @@ services:
         "dropbox.app.key" : "${DROPBOX_APP_KEY}", 
         "dropbox.app.secret" : "${DROPBOX_APP_SECRET}",
         "dropbox.app.name" : "${DROPBOX_APP_NAME}",
-        "dropbox.news.folder" : "${DROPBOX_NEWS_FOLDER}"
+        "dropbox.news.folder" : "${DROPBOX_NEWS_FOLDER}",
+        "dropbox.team.member.folder" : "${DROPBOX_TEAM_MEMBERS_FOLDER}",
+        "dropbox.fundraising.folder" : "${DROPBOX_FUNDRAISING_FOLDER}"
       }'
       JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"

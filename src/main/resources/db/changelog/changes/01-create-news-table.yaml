@@ -30,7 +30,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: image
-                  type: varchar(256)
+                  type: varchar(500)
               - column:
                   name: type
                   type: varchar(256)

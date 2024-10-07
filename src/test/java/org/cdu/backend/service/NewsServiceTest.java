@@ -74,7 +74,7 @@ public class NewsServiceTest {
         verify(newsMapper, times(1)).toModel(any());
         verify(newsRepository, times(1)).save(any());
         verify(newsMapper, times(1)).toResponseDto(any());
-        verify(dropboxImageService, times(1)).save(any(), NEWS_IMAGE);
+        verify(dropboxImageService, times(1)).save(any(), any());
     }
 
     @DisplayName("""

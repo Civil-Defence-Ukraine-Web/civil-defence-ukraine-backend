@@ -20,6 +20,8 @@ public class DropboxImageServiceImpl implements ImageService {
     private String newsFolderPath;
     @Value("${dropbox.team.member.folder}")
     private String teamMemberFolderPath;
+    @Value("${dropbox.fundraising.folder}")
+    private String fundraisingFolderPath;
 
     private final DropboxAuthService dropboxAuthService;
 
@@ -36,6 +38,9 @@ public class DropboxImageServiceImpl implements ImageService {
         }
         if (type == ImageType.TEAM_MEMBER_IMAGE) {
             dropboxImagePath = "/" + teamMemberFolderPath + "/" + image.getOriginalFilename();
+        }
+        if (type == ImageType.FUNDRAISING_IMAGE) {
+            dropboxImagePath = "/" + fundraisingFolderPath + "/" + image.getOriginalFilename();
         }
 
         DbxClientV2 client = dropboxAuthService.getDbxClient();
@@ -61,6 +66,7 @@ public class DropboxImageServiceImpl implements ImageService {
 
     public enum ImageType {
         NEWS_IMAGE,
-        TEAM_MEMBER_IMAGE
+        TEAM_MEMBER_IMAGE,
+        FUNDRAISING_IMAGE
     }
 }

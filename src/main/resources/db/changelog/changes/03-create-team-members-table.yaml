@@ -28,7 +28,7 @@ databaseChangeLog:
                   type: text
               - column:
                   name: image
-                  type: varchar(256)
+                  type: varchar(500)
                   constraints:
                     nullable: false
               - column:
