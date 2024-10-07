@@ -1,5 +1,6 @@
 package org.cdu.backend.service;
 
+import static org.cdu.backend.service.impl.DropboxImageServiceImpl.ImageType.NEWS_IMAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
@@ -21,6 +22,7 @@ import org.cdu.backend.mapper.NewsMapper;
 import org.cdu.backend.model.News;
 import org.cdu.backend.repository.news.NewsRepository;
 import org.cdu.backend.repository.news.NewsSpecificationBuilder;
+import org.cdu.backend.service.impl.DropboxImageServiceImpl;
 import org.cdu.backend.service.impl.NewsServiceImpl;
 import org.cdu.backend.util.NewsUtil;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +36,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 public class NewsServiceTest {
@@ -43,6 +47,8 @@ public class NewsServiceTest {
     private NewsMapper newsMapper;
     @Mock
     private NewsSpecificationBuilder newsSpecificationBuilder;
+    @Mock
+    private DropboxImageServiceImpl dropboxImageService;
 
     @InjectMocks
     private NewsServiceImpl newsService;
@@ -55,17 +61,20 @@ public class NewsServiceTest {
         NewsCreateRequestDto createFirstRequestDto = NewsUtil.createFirstNewsCreateRequestDto();
         News firstNews = NewsUtil.createFirstNews();
         NewsResponseDto firstNewsResponseDto = NewsUtil.createFirstNewsResponseDto();
+        MultipartFile image = new MockMultipartFile("image", (byte[]) null);
 
         when(newsMapper.toModel(createFirstRequestDto)).thenReturn(firstNews);
         when(newsRepository.save(firstNews)).thenReturn(firstNews);
         when(newsMapper.toResponseDto(firstNews)).thenReturn(firstNewsResponseDto);
+        when(dropboxImageService.save(image, NEWS_IMAGE)).thenReturn(firstNewsResponseDto.image());
 
-        NewsResponseDto result = newsService.save(createFirstRequestDto);
+        NewsResponseDto result = newsService.save(createFirstRequestDto, image);
 
         assertEquals(firstNewsResponseDto, result);
         verify(newsMapper, times(1)).toModel(any());
         verify(newsRepository, times(1)).save(any());
         verify(newsMapper, times(1)).toResponseDto(any());
+        verify(dropboxImageService, times(1)).save(any(), any());
     }
 
     @DisplayName("""
@@ -76,6 +85,7 @@ public class NewsServiceTest {
         NewsUpdateRequestDto updateFirstRequestDto = NewsUtil.createUpdateToFirstNewsRequestDto();
         News secondNews = NewsUtil.createSecondNews();
         NewsResponseDto secondNewsResponseDto = NewsUtil.createSecondNewsResponseDto();
+        MultipartFile image = new MockMultipartFile("image", (byte[]) null);
 
         when(newsRepository.findById(secondNews.getId())).thenReturn(Optional.of(secondNews));
         doAnswer(invocationOnMock -> {
@@ -85,7 +95,6 @@ public class NewsServiceTest {
 
             invocationNews.setTitle(invocationUpdateDto.title());
             invocationNews.setText(invocationUpdateDto.text());
-            invocationNews.setImage(invocationUpdateDto.image());
             invocationNews.setType(invocationUpdateDto.type());
 
             return null;
@@ -93,7 +102,8 @@ public class NewsServiceTest {
         when(newsRepository.save(secondNews)).thenReturn(secondNews);
         when(newsMapper.toResponseDto(secondNews)).thenReturn(secondNewsResponseDto);
 
-        NewsResponseDto result = newsService.update(secondNews.getId(), updateFirstRequestDto);
+        NewsResponseDto result = newsService.update(secondNews.getId(), updateFirstRequestDto,
+                image);
 
         assertEquals(secondNewsResponseDto, result);
         verify(newsRepository, times(1)).findById(any());

@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-team-members-table
+      id: create-fundraisings-table
       author: trayvor
       changes:
         - createTable:
-            tableName: team_members
+            tableName: fundraisings
             columns:
               - column:
                   name: id
@@ -13,19 +13,6 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-              - column:
-                  name: name
-                  type: varchar(256)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: position
-                  type: varchar(256)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: description
-                  type: text
               - column:
                   name: image
                   type: varchar(500)

@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-fundraisings-data
+      author: trayvor
+      changes:
+        - insert:
+            tableName: fundraisings
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: "1"
+              - column:
+                  name: image
+                  value: "https://www.dropbox.com/scl/fi/4b991fedl24rxctn9h5fy/testfundraising.jpg?rlkey=uf6fmitadtvjbkgcs8ud8gxxd&st=c0wwh3vv&dl=0"
+              - column:
+                  name: is_deleted
+                  valueBoolean: "false"

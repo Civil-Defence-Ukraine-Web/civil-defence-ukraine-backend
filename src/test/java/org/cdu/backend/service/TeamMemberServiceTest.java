@@ -18,6 +18,7 @@ import org.cdu.backend.exception.EntityNotFoundException;
 import org.cdu.backend.mapper.TeamMemberMapper;
 import org.cdu.backend.model.TeamMember;
 import org.cdu.backend.repository.team.member.TeamMemberRepository;
+import org.cdu.backend.service.impl.DropboxImageServiceImpl;
 import org.cdu.backend.service.impl.TeamMemberServiceImpl;
 import org.cdu.backend.util.TeamMemberUtil;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +30,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 public class TeamMemberServiceTest {
@@ -36,6 +39,8 @@ public class TeamMemberServiceTest {
     private TeamMemberRepository teamMemberRepository;
     @Mock
     private TeamMemberMapper teamMemberMapper;
+    @Mock
+    private DropboxImageServiceImpl dropboxImageService;
 
     @InjectMocks
     private TeamMemberServiceImpl teamMemberService;
@@ -47,13 +52,16 @@ public class TeamMemberServiceTest {
     void save_WithValidCreateRequestDto_ShouldReturnValidDto() {
         TeamMemberCreateRequestDto requestDto = TeamMemberUtil.createFirstMemberCreateRequestDto();
         TeamMember teamMember = TeamMemberUtil.createFirstTeamMember();
+        MultipartFile image = new MockMultipartFile("image", (byte[]) null);
         TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
 
+        when(dropboxImageService.save(image, DropboxImageServiceImpl.ImageType.TEAM_MEMBER_IMAGE))
+                .thenReturn(image.getOriginalFilename());
+        when(teamMemberMapper.toResponseDto(teamMember)).thenReturn(expected);
         when(teamMemberMapper.toModel(requestDto)).thenReturn(teamMember);
         when(teamMemberRepository.save(teamMember)).thenReturn(teamMember);
-        when(teamMemberMapper.toResponseDto(teamMember)).thenReturn(expected);
 
-        TeamMemberResponseDto result = teamMemberService.save(requestDto);
+        TeamMemberResponseDto result = teamMemberService.save(requestDto, image);
 
         assertEquals(expected, result);
         verify(teamMemberRepository, times(1)).save(any());
@@ -66,12 +74,14 @@ public class TeamMemberServiceTest {
             """)
     @Test
     void update_WithValidUpdateRequestDto_ShouldReturnValidDto() {
-        TeamMemberUpdateRequestDto requestDto = TeamMemberUtil.createFirstMemberUpdateRequestDto();
         TeamMember secondTeamMember = TeamMemberUtil.createSecondTeamMember();
+        MultipartFile image = new MockMultipartFile("image", (byte[]) null);
         TeamMemberResponseDto expected = TeamMemberUtil.createSecondMemberResponseDto();
+        TeamMemberUpdateRequestDto requestDto = TeamMemberUtil.createFirstMemberUpdateRequestDto();
 
-        when(teamMemberRepository.findById(secondTeamMember.getId()))
-                .thenReturn(Optional.of(secondTeamMember));
+        when(dropboxImageService.save(image, DropboxImageServiceImpl.ImageType.TEAM_MEMBER_IMAGE))
+                .thenReturn(image.getOriginalFilename());
+        when(teamMemberMapper.toResponseDto(secondTeamMember)).thenReturn(expected);
         doAnswer(invocationOnMock -> {
             TeamMemberUpdateRequestDto invocationUpdateDto =
                     (TeamMemberUpdateRequestDto) invocationOnMock.getArguments()[0];
@@ -80,15 +90,15 @@ public class TeamMemberServiceTest {
             invocationTeamMember.setName(invocationUpdateDto.name());
             invocationTeamMember.setPosition(invocationUpdateDto.position());
             invocationTeamMember.setDescription(invocationUpdateDto.description());
-            invocationTeamMember.setImage(invocationUpdateDto.image());
 
             return null;
         }).when(teamMemberMapper).updateTeamMemberFromRequestDto(requestDto, secondTeamMember);
+        when(teamMemberRepository.findById(secondTeamMember.getId()))
+                .thenReturn(Optional.of(secondTeamMember));
         when(teamMemberRepository.save(secondTeamMember)).thenReturn(secondTeamMember);
-        when(teamMemberMapper.toResponseDto(secondTeamMember)).thenReturn(expected);
 
         TeamMemberResponseDto result =
-                teamMemberService.update(secondTeamMember.getId(), requestDto);
+                teamMemberService.update(secondTeamMember.getId(), requestDto, image);
         assertEquals(expected, result);
         verify(teamMemberRepository, times(1)).findById(any());
         verify(teamMemberMapper, times(1))

@@ -4,8 +4,7 @@ import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,17 +17,22 @@ import org.cdu.backend.dto.team.member.TeamMemberCreateRequestDto;
 import org.cdu.backend.dto.team.member.TeamMemberResponseDto;
 import org.cdu.backend.dto.team.member.TeamMemberUpdateRequestDto;
 import org.cdu.backend.model.TeamMember;
+import org.cdu.backend.service.impl.DropboxImageServiceImpl;
 import org.cdu.backend.util.TeamMemberUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -42,6 +46,9 @@ public class TeamMemberControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private DropboxImageServiceImpl imageService;
 
     @BeforeAll
     public static void setUp(@Autowired WebApplicationContext webApplicationContext,
@@ -128,12 +135,28 @@ public class TeamMemberControllerTest {
         TeamMemberCreateRequestDto requestDto = TeamMemberUtil.createFirstMemberCreateRequestDto();
         TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
 
+        MockMultipartFile imageFile = new MockMultipartFile("image",
+                "team_image_1.jpg", MediaType.IMAGE_JPEG_VALUE,
+                "test image".getBytes());
+
+        Mockito.when(imageService.save(imageFile,
+                        DropboxImageServiceImpl.ImageType.TEAM_MEMBER_IMAGE))
+                .thenReturn(imageFile.getOriginalFilename());
+
+        MockMultipartFile jsonPart = new MockMultipartFile(
+                "requestDto",
+                "requestDto",
+                MediaType.APPLICATION_JSON_VALUE,
+                objectMapper.writeValueAsBytes(requestDto));
+
         MvcResult result = mockMvc.perform(
-                        post(BASIC_URL_ENDPOINT)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(requestDto))
+                        multipart(HttpMethod.POST, BASIC_URL_ENDPOINT)
+                                .file(imageFile)
+                                .file(jsonPart)
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
                 ).andExpect(status().isOk())
                 .andReturn();
+
         TeamMemberResponseDto actual =
                 objectMapper.readValue(result.getResponse().getContentAsByteArray(),
                         TeamMemberResponseDto.class);
@@ -148,12 +171,28 @@ public class TeamMemberControllerTest {
         TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
         TeamMemberUpdateRequestDto requestDto = TeamMemberUtil.createFirstMemberUpdateRequestDto();
 
+        MockMultipartFile imageFile = new MockMultipartFile("image",
+                "team_image_1.jpg", MediaType.IMAGE_JPEG_VALUE,
+                "test image".getBytes());
+
+        Mockito.when(imageService.save(imageFile,
+                        DropboxImageServiceImpl.ImageType.TEAM_MEMBER_IMAGE))
+                .thenReturn(imageFile.getOriginalFilename());
+
+        MockMultipartFile jsonPart = new MockMultipartFile(
+                "requestDto",
+                "requestDto",
+                MediaType.APPLICATION_JSON_VALUE,
+                objectMapper.writeValueAsBytes(requestDto));
+
         MvcResult result = mockMvc.perform(
-                        put(BASIC_URL_ENDPOINT + "/2")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(requestDto))
+                        multipart(HttpMethod.PUT, BASIC_URL_ENDPOINT + "/2")
+                                .file(imageFile)
+                                .file(jsonPart)
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
                 ).andExpect(status().isOk())
                 .andReturn();
+
         TeamMemberResponseDto actual =
                 objectMapper.readValue(result.getResponse().getContentAsByteArray(),
                         TeamMemberResponseDto.class);

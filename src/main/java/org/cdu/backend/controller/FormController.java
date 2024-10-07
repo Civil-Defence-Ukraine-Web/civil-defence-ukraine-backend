@@ -1,6 +1,7 @@
 package org.cdu.backend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.cdu.backend.dto.form.FormRequestDto;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Form sending", description = "Description for form sending")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/form")

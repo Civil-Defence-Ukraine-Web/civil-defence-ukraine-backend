@@ -11,10 +11,12 @@ import org.cdu.backend.mapper.NewsMapper;
 import org.cdu.backend.model.News;
 import org.cdu.backend.repository.news.NewsRepository;
 import org.cdu.backend.repository.news.NewsSpecificationBuilder;
+import org.cdu.backend.service.ImageService;
 import org.cdu.backend.service.NewsService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +24,13 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
     private final NewsMapper newsMapper;
     private final NewsSpecificationBuilder specificationBuilder;
+    private final ImageService imageService;
 
     @Override
-    public NewsResponseDto save(NewsCreateRequestDto requestDto) {
+    public NewsResponseDto save(NewsCreateRequestDto requestDto, MultipartFile image) {
         News news = newsMapper.toModel(requestDto);
+        String imageUrl = imageService.save(image, DropboxImageServiceImpl.ImageType.NEWS_IMAGE);
+        news.setImage(imageUrl);
         newsRepository.save(news);
         return newsMapper.toResponseDto(news);
     }
@@ -54,11 +59,16 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsResponseDto update(Long id, NewsUpdateRequestDto requestDto) {
+    public NewsResponseDto update(Long id, NewsUpdateRequestDto requestDto, MultipartFile image) {
         News news = newsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
                 "No News found with id: " + id)
         );
         newsMapper.updateNewsFromRequestDto(requestDto, news);
+        if (!image.isEmpty()) {
+            String imageUrl =
+                    imageService.save(image, DropboxImageServiceImpl.ImageType.NEWS_IMAGE);
+            news.setImage(imageUrl);
+        }
         newsRepository.save(news);
         return newsMapper.toResponseDto(news);
     }

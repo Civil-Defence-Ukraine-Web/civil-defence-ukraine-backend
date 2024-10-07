@@ -27,12 +27,12 @@ public class TeamMemberUtil {
 
     public static TeamMemberCreateRequestDto createFirstMemberCreateRequestDto() {
         return new TeamMemberCreateRequestDto(FIRST_MEMBER_NAME, FIRST_MEMBER_POSITION,
-                FIRST_MEMBER_DESCRIPTION, FIRST_MEMBER_IMAGE);
+                FIRST_MEMBER_DESCRIPTION);
     }
 
     public static TeamMemberUpdateRequestDto createFirstMemberUpdateRequestDto() {
         return new TeamMemberUpdateRequestDto(FIRST_MEMBER_NAME, FIRST_MEMBER_POSITION,
-                FIRST_MEMBER_DESCRIPTION, FIRST_MEMBER_IMAGE);
+                FIRST_MEMBER_DESCRIPTION);
     }
 
     public static TeamMember createFirstTeamMember() {
