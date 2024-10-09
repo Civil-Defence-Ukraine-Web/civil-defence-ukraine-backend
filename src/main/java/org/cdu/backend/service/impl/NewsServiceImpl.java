@@ -1,5 +1,6 @@
 package org.cdu.backend.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.cdu.backend.dto.news.NewsCreateRequestDto;
@@ -46,6 +47,15 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsResponseDto> findAll(Pageable pageable) {
         return newsRepository.findAll(pageable)
+                .stream()
+                .map(newsMapper::toResponseDto)
+                .toList();
+    }
+
+    @Override
+    public List<NewsResponseDto> findLastMonth(Pageable pageable) {
+        LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
+        return newsRepository.findNewsByPublicationDateAfter(lastMonth, pageable)
                 .stream()
                 .map(newsMapper::toResponseDto)
                 .toList();
