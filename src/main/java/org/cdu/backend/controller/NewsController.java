@@ -42,6 +42,13 @@ public class NewsController {
         return newsService.findById(id);
     }
 
+    @Operation(summary = "Find last month news", description = "Returns news that were posted in "
+            + "last month")
+    @GetMapping("/last-month")
+    public List<NewsResponseDto> findLastMonth(Pageable pageable) {
+        return newsService.findLastMonth(pageable);
+    }
+
     @Operation(summary = "Search news with params", description = "Search news with params: "
             + "title or type")
     @GetMapping("/search")
