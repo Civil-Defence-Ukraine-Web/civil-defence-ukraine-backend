@@ -1,0 +1,16 @@
+  bug/mapstruct-processor[m
+  bug/remove-spring-security[m
+  bug/update-endpoint[m
+  feature/docker-support[m
+  feature/dropbox-image-storing[m
+  feature/form-mail-send[m
+  feature/global-exception-handler[m
+  feature/last-month-articles-finding[m
+  feature/liquibase-news[m
+  feature/mysql-support[m
+  feature/news[m
+  feature/news-puplicationDate-choosing[m
+  feature/properties-file[m
+  feature/team-members[m
+  feature/tests-news[m
+* [32mmain[m

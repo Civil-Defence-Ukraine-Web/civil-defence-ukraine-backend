@@ -34,11 +34,13 @@ public class NewsUtil {
     public static final NewsType THIRD_NEWS_TYPE = NewsType.EVENT;
 
     public static NewsCreateRequestDto createFirstNewsCreateRequestDto() {
-        return new NewsCreateRequestDto(FIRST_NEWS_TITLE, FIRST_NEWS_TEXT, FIRST_NEWS_TYPE);
+        return new NewsCreateRequestDto(FIRST_NEWS_TITLE, FIRST_NEWS_TEXT, FIRST_NEWS_TYPE,
+                FIRST_NEWS_PUBLICATION_DATE);
     }
 
     public static NewsUpdateRequestDto createUpdateToFirstNewsRequestDto() {
-        return new NewsUpdateRequestDto(FIRST_NEWS_TITLE, FIRST_NEWS_TEXT, FIRST_NEWS_TYPE);
+        return new NewsUpdateRequestDto(FIRST_NEWS_TITLE, FIRST_NEWS_TEXT, FIRST_NEWS_TYPE,
+                FIRST_NEWS_PUBLICATION_DATE);
     }
 
     public static News createFirstNews() {
