@@ -35,12 +35,12 @@ public class NewsUtil {
 
     public static NewsCreateRequestDto createFirstNewsCreateRequestDto() {
         return new NewsCreateRequestDto(FIRST_NEWS_TITLE, FIRST_NEWS_TEXT, FIRST_NEWS_IMAGE,
-                FIRST_NEWS_TYPE);
+                FIRST_NEWS_TYPE, FIRST_NEWS_PUBLICATION_DATE);
     }
 
     public static NewsUpdateRequestDto createUpdateToFirstNewsRequestDto() {
         return new NewsUpdateRequestDto(FIRST_NEWS_TITLE, FIRST_NEWS_TEXT, FIRST_NEWS_IMAGE,
-                FIRST_NEWS_TYPE);
+                FIRST_NEWS_TYPE, FIRST_NEWS_PUBLICATION_DATE);
     }
 
     public static News createFirstNews() {
