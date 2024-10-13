@@ -33,6 +33,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -42,6 +43,8 @@ import org.springframework.web.context.WebApplicationContext;
 public class TeamMemberControllerTest {
     protected static MockMvc mockMvc;
 
+    private static final String BASIC_PUBLIC_URL = "/public";
+    private static final String BASIC_ADMIN_URL = "/admin";
     private static final String BASIC_URL_ENDPOINT = "/team";
 
     @Autowired
@@ -97,7 +100,8 @@ public class TeamMemberControllerTest {
         List<TeamMemberResponseDto> expected = TeamMemberUtil.createTeamMemberResponseDtoList();
 
         MvcResult result = mockMvc.perform(
-                        get(BASIC_URL_ENDPOINT).contentType(MediaType.APPLICATION_JSON))
+                        get(BASIC_PUBLIC_URL + BASIC_URL_ENDPOINT)
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -116,7 +120,7 @@ public class TeamMemberControllerTest {
         TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
 
         MvcResult result = mockMvc.perform(
-                        get(BASIC_URL_ENDPOINT + "/" + expected.id())
+                        get(BASIC_PUBLIC_URL + BASIC_URL_ENDPOINT + "/" + expected.id())
                                 .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();
@@ -130,6 +134,7 @@ public class TeamMemberControllerTest {
     @DisplayName("""
             Verify save endpoint works correctly, saves and returns correct team member
             """)
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
     void save_ValidCreateDto_ShouldReturnCorrectTeamMemberDto() throws Exception {
         TeamMemberCreateRequestDto requestDto = TeamMemberUtil.createFirstMemberCreateRequestDto();
@@ -150,7 +155,7 @@ public class TeamMemberControllerTest {
                 objectMapper.writeValueAsBytes(requestDto));
 
         MvcResult result = mockMvc.perform(
-                        multipart(HttpMethod.POST, BASIC_URL_ENDPOINT)
+                        multipart(HttpMethod.POST, BASIC_ADMIN_URL + BASIC_URL_ENDPOINT)
                                 .file(imageFile)
                                 .file(jsonPart)
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -166,6 +171,7 @@ public class TeamMemberControllerTest {
     @DisplayName("""
             Verify update endpoint works correctly, updates and returns correct team member
             """)
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
     void update_WithValidIdAndUpdateDto_ShouldReturnCorrectTeamMemberDto() throws Exception {
         TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
@@ -186,7 +192,7 @@ public class TeamMemberControllerTest {
                 objectMapper.writeValueAsBytes(requestDto));
 
         MvcResult result = mockMvc.perform(
-                        multipart(HttpMethod.PUT, BASIC_URL_ENDPOINT + "/2")
+                        multipart(HttpMethod.PUT, BASIC_ADMIN_URL + BASIC_URL_ENDPOINT + "/2")
                                 .file(imageFile)
                                 .file(jsonPart)
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -202,10 +208,11 @@ public class TeamMemberControllerTest {
     @DisplayName("""
             Verify delete endpoint works correctly and returns success code
             """)
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
     void delete_WithValidId_ShouldReturnSuccess() throws Exception {
         TeamMember memberToDelete = TeamMemberUtil.createFirstTeamMember();
-        mockMvc.perform(delete(BASIC_URL_ENDPOINT + "/" + memberToDelete.getId())
+        mockMvc.perform(delete(BASIC_ADMIN_URL + BASIC_URL_ENDPOINT + "/" + memberToDelete.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();

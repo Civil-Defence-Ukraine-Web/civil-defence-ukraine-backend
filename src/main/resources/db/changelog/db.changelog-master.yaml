@@ -17,3 +17,21 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/06-insert-fundraisings-data.yaml
       context: dev
+  - include:
+      file: db/changelog/changes/07-create-users-table.yaml
+      context: dev, test
+  - include:
+      file: db/changelog/changes/08-create-roles-table.yaml
+      context: dev, test
+  - include:
+      file: db/changelog/changes/09-create-users-roles-table.yaml
+      context: dev, test
+  - include:
+      file: db/changelog/changes/10-insert-roles-into-roles-table.yaml
+      context: dev
+  - include:
+      file: db/changelog/changes/11-insert-users-into-users-table.yaml
+      context: dev
+  - include:
+      file: db/changelog/changes/12-insert-dependencies-into-users-roles-table.yaml
+      context: dev

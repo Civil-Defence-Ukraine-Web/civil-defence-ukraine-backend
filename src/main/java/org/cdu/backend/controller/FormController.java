@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Form sending", description = "Description for form sending")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/form")
+@RequestMapping("/public/form")
 public class FormController {
     private final FormService formService;
 

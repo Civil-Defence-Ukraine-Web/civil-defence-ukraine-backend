@@ -6,17 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.cdu.backend.dto.fundraising.FundraisingResponseDto;
 import org.cdu.backend.service.FundraisingService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Controller for fundraising image management",
         description = "In that controller you can change fundraising image")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/fundraising")
+@RequestMapping("/public/fundraising")
 public class FundraisingController {
     private final FundraisingService fundraisingService;
 
@@ -24,12 +21,5 @@ public class FundraisingController {
     @GetMapping
     public FundraisingResponseDto getActual() {
         return fundraisingService.getActual();
-    }
-
-    @Operation(summary = "Replace actual fundraising",
-            description = "Replaces actual fundraising image")
-    @PostMapping
-    public FundraisingResponseDto replaceActual(@RequestPart("image") MultipartFile image) {
-        return fundraisingService.replaceActual(image);
     }
 }
