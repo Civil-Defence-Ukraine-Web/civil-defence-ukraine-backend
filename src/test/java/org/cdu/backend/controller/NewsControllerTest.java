@@ -32,6 +32,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -41,6 +42,8 @@ import org.springframework.web.context.WebApplicationContext;
 public class NewsControllerTest {
     protected static MockMvc mockMvc;
 
+    private static final String BASIC_PUBLIC_URL = "/public";
+    private static final String BASIC_ADMIN_URL = "/admin";
     private static final String BASIC_URL_ENDPOINT = "/news";
     private static final String SEARCH_PARAM_TITLE = "title";
     private static final String SEARCH_PARAM_TYPE = "type";
@@ -96,7 +99,8 @@ public class NewsControllerTest {
         List<NewsResponseDto> expected = NewsUtil.createThreeNewsDtoList();
 
         MvcResult result = mockMvc.perform(
-                        get(BASIC_URL_ENDPOINT).contentType(MediaType.APPLICATION_JSON))
+                        get(BASIC_PUBLIC_URL + BASIC_URL_ENDPOINT)
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -114,7 +118,7 @@ public class NewsControllerTest {
         NewsResponseDto expected = NewsUtil.createFirstNewsResponseDto();
 
         MvcResult result = mockMvc.perform(
-                        get(BASIC_URL_ENDPOINT + "/" + expected.id())
+                        get(BASIC_PUBLIC_URL + BASIC_URL_ENDPOINT + "/" + expected.id())
                                 .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();
@@ -132,7 +136,7 @@ public class NewsControllerTest {
         List<NewsResponseDto> expected = List.of(NewsUtil.createFirstNewsResponseDto());
 
         MvcResult result = mockMvc.perform(
-                        get(BASIC_URL_ENDPOINT + "/search")
+                        get(BASIC_PUBLIC_URL + BASIC_URL_ENDPOINT + "/search")
                                 .param(SEARCH_PARAM_TITLE, expected.getFirst().title())
                                 .param(SEARCH_PARAM_TYPE, expected.getFirst().type().toString())
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -148,6 +152,7 @@ public class NewsControllerTest {
     @DisplayName("""
             Verify save endpoint works correctly and returns correct DTO
             """)
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
     void save_ValidCreateDto_ShouldReturnCorrectNewsDto() throws Exception {
         NewsCreateRequestDto createRequestDto = NewsUtil.createFirstNewsCreateRequestDto();
@@ -167,7 +172,7 @@ public class NewsControllerTest {
                 objectMapper.writeValueAsBytes(createRequestDto));
 
         MvcResult result = mockMvc.perform(
-                        multipart(HttpMethod.POST, BASIC_URL_ENDPOINT)
+                        multipart(HttpMethod.POST, BASIC_ADMIN_URL + BASIC_URL_ENDPOINT)
                                 .file(imageFile)
                                 .file(jsonPart)
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -182,6 +187,7 @@ public class NewsControllerTest {
     @DisplayName("""
             Verify update endpoint works correctly, updates and returns correct DTO
             """)
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
     void update_ValidIdAndUpdateDto_ShouldReturnCorrectNewsDto() throws Exception {
         NewsResponseDto expected = NewsUtil.createFirstNewsResponseDto();
@@ -202,7 +208,7 @@ public class NewsControllerTest {
                 objectMapper.writeValueAsBytes(updateToFirstNewsRequestDto));
 
         MvcResult result = mockMvc.perform(
-                        multipart(HttpMethod.PUT, BASIC_URL_ENDPOINT + "/2")
+                        multipart(HttpMethod.PUT, BASIC_ADMIN_URL + BASIC_URL_ENDPOINT + "/2")
                                 .file(imageFile)
                                 .file(jsonPart)
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -217,10 +223,11 @@ public class NewsControllerTest {
     @DisplayName("""
             Verify delete endpoint works correctly with success status code
             """)
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
     void delete_ValidId_ShouldReturnSuccess() throws Exception {
         NewsResponseDto newsToDelete = NewsUtil.createFirstNewsResponseDto();
-        mockMvc.perform(delete(BASIC_URL_ENDPOINT + "/" + newsToDelete.id())
+        mockMvc.perform(delete(BASIC_ADMIN_URL + BASIC_URL_ENDPOINT + "/" + newsToDelete.id())
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();
