@@ -25,7 +25,7 @@ databaseChangeLog:
                   valueDate: "2024-09-28T12:00:00"
               - column:
                   name: image
-                  value: "https://www.dropbox.com/scl/fi/azwce8kzkjcnqdwzxi5y3/testnews_3.jpg?rlkey=bvbuul9pn4z3oceul0scyb08o&st=1yt3lilq&dl=0"
+                  value: "https://www.dropbox.com/scl/fi/azwce8kzkjcnqdwzxi5y3/testnews_3.jpg?rlkey=bvbuul9pn4z3oceul0scyb08o&st=1yt3lilq&raw=1"
               - column:
                   name: type
                   value: "NEWS"
@@ -51,7 +51,7 @@ databaseChangeLog:
                   valueDate: "2024-09-28T12:00:00"
               - column:
                   name: image
-                  value: "https://www.dropbox.com/scl/fi/0clhr3kb4ksbyzwyy99gi/testnews_1.jpg?rlkey=cp6i0jkniz8h3zfdi19yvqz7t&st=if3kxdil&dl=0"
+                  value: "https://www.dropbox.com/scl/fi/0clhr3kb4ksbyzwyy99gi/testnews_1.jpg?rlkey=cp6i0jkniz8h3zfdi19yvqz7t&st=if3kxdil&raw=1"
               - column:
                   name: type
                   value: "REPORT"
@@ -80,7 +80,7 @@ databaseChangeLog:
                   valueDate: "2024-09-28T12:00:00"
               - column:
                   name: image
-                  value: "https://www.dropbox.com/scl/fi/h7fm5po3yf8aazh36pqho/testnews_2.jpg?rlkey=6tzaah77116ja7fvvahq528q8&st=o2dl5a2e&dl=0"
+                  value: "https://www.dropbox.com/scl/fi/h7fm5po3yf8aazh36pqho/testnews_2.jpg?rlkey=6tzaah77116ja7fvvahq528q8&st=o2dl5a2e&raw=1"
               - column:
                   name: type
                   value: "EVENT"

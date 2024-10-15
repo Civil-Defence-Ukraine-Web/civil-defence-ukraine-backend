@@ -16,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class DropboxImageServiceImpl implements ImageService {
+    private static final String DEFAULT_VIEW_FORMAT = "&dl=0";
+    private static final String SOURCE_VIEW_FORMAT = "&raw=1";
+
     @Value("${dropbox.news.folder}")
     private String newsFolderPath;
     @Value("${dropbox.team.member.folder}")
@@ -60,8 +63,7 @@ public class DropboxImageServiceImpl implements ImageService {
         } catch (DbxException e) {
             throw new ImageSavingException("Can`t share link of image " + image.getName(), e);
         }
-
-        return dropboxImageLink.getUrl();
+        return dropboxImageLink.getUrl().replace(DEFAULT_VIEW_FORMAT, SOURCE_VIEW_FORMAT);
     }
 
     public enum ImageType {
