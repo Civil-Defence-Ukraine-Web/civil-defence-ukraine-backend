@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class FormServiceImpl implements FormService {
     private static final String MESSAGE_TEXT_BODY = "Feedback body: ";
     private static final String MESSAGE_TEXT_SENDER = "Feedback sender: ";
-    private static final String MESSAGE_TEXT_IS_VOLUNTEER = "Is sender want to be volunteer: ";
+    private static final String MESSAGE_TEXT_IS_VOLUNTEER = "Does sender want to be volunteer: ";
 
     @Value("${form.mail.recipient}")
     private String mailRecipient;
