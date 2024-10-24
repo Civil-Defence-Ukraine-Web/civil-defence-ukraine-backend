@@ -30,15 +30,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        String token = getToken(request);
+        try {
+            String token = getToken(request);
 
-        if (token != null && jwtUtil.isValidToken(token)) {
-            String username = jwtUtil.getUsername(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities()
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (token != null && jwtUtil.isValidToken(token)) {
+                String username = jwtUtil.getUsername(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities()
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                    "Invalid or expired JWT token");
         }
 
         filterChain.doFilter(request, response);
