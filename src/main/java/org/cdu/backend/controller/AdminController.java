@@ -42,6 +42,7 @@ public class AdminController {
             @RequestPart("requestDto") @Valid NewsCreateRequestDto requestDto,
             @RequestPart(value = "image", required = false) MultipartFile image
     ) {
+
         return newsService.save(requestDto, image);
     }
 

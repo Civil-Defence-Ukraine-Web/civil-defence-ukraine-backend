@@ -17,5 +17,7 @@ public interface TeamMemberService {
 
     List<TeamMemberResponseDto> findAll(Pageable pageable);
 
+    List<TeamMemberResponseDto> findAll();
+
     void deleteById(Long id);
 }

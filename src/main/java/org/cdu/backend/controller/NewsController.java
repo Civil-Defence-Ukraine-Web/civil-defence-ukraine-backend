@@ -24,6 +24,9 @@ public class NewsController {
             + " sorting and pagination")
     @GetMapping
     public List<NewsResponseDto> findAll(Pageable pageable) {
+        if (pageable.isUnpaged()) {
+            return newsService.findAll();
+        }
         return newsService.findAll(pageable);
     }
 

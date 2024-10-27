@@ -29,8 +29,11 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public NewsResponseDto save(NewsCreateRequestDto requestDto, MultipartFile image) {
+        String imageUrl = null;
         News news = newsMapper.toModel(requestDto);
-        String imageUrl = imageService.save(image, DropboxImageServiceImpl.ImageType.NEWS_IMAGE);
+        if (image != null) {
+            imageUrl = imageService.save(image, DropboxImageServiceImpl.ImageType.NEWS_IMAGE);
+        }
         news.setImage(imageUrl);
         newsRepository.save(news);
         return newsMapper.toResponseDto(news);
@@ -47,6 +50,14 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsResponseDto> findAll(Pageable pageable) {
         return newsRepository.findAll(pageable)
+                .stream()
+                .map(newsMapper::toResponseDto)
+                .toList();
+    }
+
+    @Override
+    public List<NewsResponseDto> findAll() {
+        return newsRepository.findAll()
                 .stream()
                 .map(newsMapper::toResponseDto)
                 .toList();

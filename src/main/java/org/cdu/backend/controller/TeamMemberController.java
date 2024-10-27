@@ -22,6 +22,9 @@ public class TeamMemberController {
     @Operation(summary = "Find all members", description = "Returns all members")
     @GetMapping
     List<TeamMemberResponseDto> findAll(Pageable pageable) {
+        if (pageable.isUnpaged()) {
+            return teamMemberService.findAll();
+        }
         return teamMemberService.findAll(pageable);
     }
 
