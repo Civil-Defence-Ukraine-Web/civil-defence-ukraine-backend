@@ -85,9 +85,9 @@ public class NewsServiceImpl implements NewsService {
                 "No News found with id: " + id)
         );
         newsMapper.updateNewsFromRequestDto(requestDto, news);
-        if (!image.isEmpty()) {
-            String imageUrl =
-                    imageService.save(image, DropboxImageServiceImpl.ImageType.NEWS_IMAGE);
+        if (image != null) {
+            String imageUrl = imageService.save(image,
+                    DropboxImageServiceImpl.ImageType.NEWS_IMAGE);
             news.setImage(imageUrl);
         }
         newsRepository.save(news);
