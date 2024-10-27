@@ -25,8 +25,11 @@ public class TeamMemberServiceImpl implements TeamMemberService {
     @Override
     public TeamMemberResponseDto save(TeamMemberCreateRequestDto requestDto, MultipartFile image) {
         TeamMember teamMember = teamMemberMapper.toModel(requestDto);
-        String url = imageService.save(image, DropboxImageServiceImpl.ImageType.TEAM_MEMBER_IMAGE);
-        teamMember.setImage(url);
+        if (image != null) {
+            String url =
+                    imageService.save(image, DropboxImageServiceImpl.ImageType.TEAM_MEMBER_IMAGE);
+            teamMember.setImage(url);
+        }
         teamMemberRepository.save(teamMember);
         return teamMemberMapper.toResponseDto(teamMember);
     }
@@ -37,8 +40,11 @@ public class TeamMemberServiceImpl implements TeamMemberService {
         TeamMember teamMember = teamMemberRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("No team member found with id: " + id));
         teamMemberMapper.updateTeamMemberFromRequestDto(requestDto, teamMember);
-        String url = imageService.save(image, DropboxImageServiceImpl.ImageType.TEAM_MEMBER_IMAGE);
-        teamMember.setImage(url);
+        if (image != null) {
+            String url =
+                    imageService.save(image, DropboxImageServiceImpl.ImageType.TEAM_MEMBER_IMAGE);
+            teamMember.setImage(url);
+        }
         teamMemberRepository.save(teamMember);
         return teamMemberMapper.toResponseDto(teamMember);
     }
