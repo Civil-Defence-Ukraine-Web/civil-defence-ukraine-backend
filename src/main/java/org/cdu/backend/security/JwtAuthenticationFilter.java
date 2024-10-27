@@ -1,5 +1,6 @@
 package org.cdu.backend.security;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,9 +31,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        try {
-            String token = getToken(request);
+        String token = getToken(request);
 
+        try {
             if (token != null && jwtUtil.isValidToken(token)) {
                 String username = jwtUtil.getUsername(token);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -41,12 +42,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                    "Invalid or expired JWT token");
+          filterChain.doFilter(request, response);
+        } catch (JwtException ex) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid or expired JWT token");
         }
-
-        filterChain.doFilter(request, response);
     }
 
     private String getToken(HttpServletRequest request) {

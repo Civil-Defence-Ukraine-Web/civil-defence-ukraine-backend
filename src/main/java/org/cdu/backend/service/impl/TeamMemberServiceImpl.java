@@ -59,6 +59,14 @@ public class TeamMemberServiceImpl implements TeamMemberService {
     }
 
     @Override
+    public List<TeamMemberResponseDto> findAll() {
+        return teamMemberRepository.findAll()
+                .stream()
+                .map(teamMemberMapper::toResponseDto)
+                .toList();
+    }
+
+    @Override
     public void deleteById(Long id) {
         teamMemberRepository.deleteById(id);
     }

@@ -15,6 +15,8 @@ public interface NewsService {
 
     List<NewsResponseDto> findAll(Pageable pageable);
 
+    List<NewsResponseDto> findAll();
+
     List<NewsResponseDto> findLastMonth(Pageable pageable);
 
     List<NewsResponseDto> search(NewsSearchParameters searchParameters);
