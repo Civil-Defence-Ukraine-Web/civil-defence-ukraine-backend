@@ -58,4 +58,15 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ImageSavingException.class)
+    public ResponseEntity<Object> handleImageSavingException(ImageSavingException ex,
+                                                             WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP_BODY, LocalDateTime.now());
+        body.put(STATUS_BODY, HttpStatus.BAD_REQUEST);
+        body.put(ERRORS_BODY, ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
 }

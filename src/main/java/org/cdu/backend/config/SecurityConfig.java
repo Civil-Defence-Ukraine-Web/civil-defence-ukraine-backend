@@ -26,6 +26,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -37,6 +38,8 @@ public class SecurityConfig {
         return http
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers("/auth/**", "/error",
@@ -74,4 +77,5 @@ public class SecurityConfig {
             }
         };
     }
+
 }
