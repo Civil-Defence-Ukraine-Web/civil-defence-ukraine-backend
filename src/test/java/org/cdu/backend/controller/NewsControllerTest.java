@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.util.Arrays;
 import java.util.List;
 import javax.sql.DataSource;
@@ -31,6 +32,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,9 +52,18 @@ public class NewsControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private DataSource dataSource;
 
     @MockBean
     private DropboxImageServiceImpl imageService;
+
+    @SneakyThrows
+    private boolean isPostgres(DataSource dataSource) {
+        return JdbcUtils.extractDatabaseMetaData(dataSource,
+                        DatabaseMetaData::getDatabaseProductName)
+                .toLowerCase().contains("postgresql");
+    }
 
     @BeforeAll
     public static void setUp(@Autowired WebApplicationContext webApplicationContext,
@@ -63,6 +74,7 @@ public class NewsControllerTest {
         teardown(dataSource);
     }
 
+    @SneakyThrows
     @AfterEach
     public void afterEach(@Autowired DataSource dataSource) {
         teardown(dataSource);
@@ -155,6 +167,7 @@ public class NewsControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
     void save_ValidCreateDto_ShouldReturnCorrectNewsDto() throws Exception {
+        teardown(dataSource);
         NewsCreateRequestDto createRequestDto = NewsUtil.createFirstNewsCreateRequestDto();
         NewsResponseDto expected = NewsUtil.createFirstNewsResponseDto();
 

@@ -49,6 +49,8 @@ public class TeamMemberControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private DataSource dataSource;
 
     @MockBean
     private DropboxImageServiceImpl imageService;
@@ -137,6 +139,7 @@ public class TeamMemberControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
     void save_ValidCreateDto_ShouldReturnCorrectTeamMemberDto() throws Exception {
+        teardown(dataSource);
         TeamMemberCreateRequestDto requestDto = TeamMemberUtil.createFirstMemberCreateRequestDto();
         TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
 
