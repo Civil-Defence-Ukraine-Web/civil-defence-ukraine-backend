@@ -7,9 +7,6 @@ databaseChangeLog:
             tableName: news
             columns:
               - column:
-                  name: id
-                  valueNumeric: "1"
-              - column:
                   name: title
                   value: "News from Denmark"
               - column:
@@ -36,9 +33,6 @@ databaseChangeLog:
             tableName: news
             columns:
               - column:
-                  name: id
-                  valueNumeric: "2"
-              - column:
                   name: title
                   value: "Report electricity"
               - column:
@@ -61,9 +55,6 @@ databaseChangeLog:
         - insert:
             tableName: news
             columns:
-              - column:
-                  name: id
-                  valueNumeric: "3"
               - column:
                   name: title
                   value: "Event Culture Day"

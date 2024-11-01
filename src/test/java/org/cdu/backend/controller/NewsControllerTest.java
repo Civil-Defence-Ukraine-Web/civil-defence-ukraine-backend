@@ -167,7 +167,7 @@ public class NewsControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
     void save_ValidCreateDto_ShouldReturnCorrectNewsDto() throws Exception {
-        teardown(dataSource);
+        teardown(dataSource); //For postgreSql support
         NewsCreateRequestDto createRequestDto = NewsUtil.createFirstNewsCreateRequestDto();
         NewsResponseDto expected = NewsUtil.createFirstNewsResponseDto();
 
