@@ -139,7 +139,7 @@ public class TeamMemberControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
     void save_ValidCreateDto_ShouldReturnCorrectTeamMemberDto() throws Exception {
-        teardown(dataSource);
+        teardown(dataSource); //For postgreSql support
         TeamMemberCreateRequestDto requestDto = TeamMemberUtil.createFirstMemberCreateRequestDto();
         TeamMemberResponseDto expected = TeamMemberUtil.createFirstMemberResponseDto();
 
