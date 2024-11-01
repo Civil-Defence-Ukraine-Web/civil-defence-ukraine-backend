@@ -36,7 +36,9 @@ public class AdminController {
     private final FundraisingService fundraisingService;
     private final TeamMemberService teamMemberService;
 
-    @Operation(summary = "Save news to database", description = "Save news to database")
+    @Operation(summary = "Save news to database", description = "Save news to database. You can "
+            + "send image as multipart file or in requestDto part, but sending by file have "
+            + "priority before image link in requestDto (in case you send them at the same time).")
     @PostMapping(path = "/news", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public NewsResponseDto saveNews(
             @RequestPart("requestDto") @Valid NewsCreateRequestDto requestDto,
@@ -69,7 +71,9 @@ public class AdminController {
         return fundraisingService.replaceActual(image);
     }
 
-    @Operation(summary = "Save new member", description = "Saves new member to database")
+    @Operation(summary = "Save new member", description = "Saves new member to database. You can "
+            + "sand image as multipart file or as link in requestDto, but image in multipart file "
+            + "is prioritized (in case you send image in two ways at the same time).")
     @PostMapping(path = "/team", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     TeamMemberResponseDto saveTeamMember(
             @RequestPart("requestDto") @Valid TeamMemberCreateRequestDto requestDto,

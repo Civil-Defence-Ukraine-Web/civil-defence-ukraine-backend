@@ -33,8 +33,8 @@ public class NewsServiceImpl implements NewsService {
         News news = newsMapper.toModel(requestDto);
         if (image != null) {
             imageUrl = imageService.save(image, DropboxImageServiceImpl.ImageType.NEWS_IMAGE);
+            news.setImage(imageUrl);
         }
-        news.setImage(imageUrl);
         newsRepository.save(news);
         return newsMapper.toResponseDto(news);
     }
