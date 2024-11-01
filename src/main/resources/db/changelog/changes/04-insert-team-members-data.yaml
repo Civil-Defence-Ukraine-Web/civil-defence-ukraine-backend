@@ -7,9 +7,6 @@ databaseChangeLog:
             tableName: team_members
             columns:
               - column:
-                  name: id
-                  valueNumeric: "1"
-              - column:
                   name: name
                   value: "John Doe"
               - column:
@@ -32,9 +29,6 @@ databaseChangeLog:
             tableName: team_members
             columns:
               - column:
-                  name: id
-                  valueNumeric: "2"
-              - column:
                   name: name
                   value: "Jane Smith"
               - column:
@@ -56,9 +50,6 @@ databaseChangeLog:
             tableName: team_members
             columns:
               - column:
-                  name: id
-                  valueNumeric: "3"
-              - column:
                   name: name
                   value: "Michael Johnson"
               - column:
@@ -78,9 +69,6 @@ databaseChangeLog:
         - insert:
             tableName: team_members
             columns:
-              - column:
-                  name: id
-                  valueNumeric: "4"
               - column:
                   name: name
                   value: "Emily Davis"
@@ -102,9 +90,6 @@ databaseChangeLog:
             tableName: team_members
             columns:
               - column:
-                  name: id
-                  valueNumeric: "5"
-              - column:
                   name: name
                   value: "David Lee"
               - column:
@@ -124,9 +109,6 @@ databaseChangeLog:
         - insert:
             tableName: team_members
             columns:
-              - column:
-                  name: id
-                  valueNumeric: "6"
               - column:
                   name: name
                   value: "Sarah Kim"
