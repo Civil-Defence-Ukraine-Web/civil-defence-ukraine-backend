@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: update-news-table
+      author: trayvor
+      changes:
+        - addColumn:
+            tableName: news
+            columns:
+              - column:
+                  name: link
+                  type: varchar(256)

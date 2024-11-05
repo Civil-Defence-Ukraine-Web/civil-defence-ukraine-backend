@@ -7,9 +7,10 @@ import org.cdu.backend.model.News.NewsType;
 
 public record NewsCreateRequestDto(@NotBlank String title, @NotBlank String text,
                                    @NotNull NewsType type, LocalDateTime publicationDate,
-                                   String image) {
+                                   String image, String link) {
+
     public NewsCreateRequestDto(@NotBlank String title, @NotBlank String text,
                                 @NotNull NewsType type, LocalDateTime publicationDate) {
-        this(title, text, type, publicationDate, null);
+        this(title, text, type, publicationDate, null, null);
     }
 }

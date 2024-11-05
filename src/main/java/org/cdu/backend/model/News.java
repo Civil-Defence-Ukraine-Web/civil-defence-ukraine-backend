@@ -38,6 +38,7 @@ public class News {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private NewsType type;
+    private String link;
     @Column(nullable = false, columnDefinition = "tinyint")
     private boolean isDeleted = false;
 

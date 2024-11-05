@@ -186,7 +186,7 @@ public class NewsServiceTest {
         NewsResponseDto firstNewsResponseDto = NewsUtil.createFirstNewsResponseDto();
 
         NewsSearchParameters newsSearchParameters = new NewsSearchParameters("title",
-                News.NewsType.NEWS);
+                News.NewsType.NEWS, null);
         Specification<News> newsSpecification = mock(Specification.class);
         List<News> resultNewsList = List.of(firstNews);
         List<NewsResponseDto> expected = List.of(firstNewsResponseDto);
