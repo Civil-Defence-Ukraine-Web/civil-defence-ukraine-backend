@@ -5,6 +5,7 @@ import org.cdu.backend.dto.news.NewsSearchParameters;
 import org.cdu.backend.model.News;
 import org.cdu.backend.repository.SpecificationBuilder;
 import org.cdu.backend.repository.SpecificationProviderManager;
+import org.cdu.backend.repository.news.spec.LinkSpecificationProvider;
 import org.cdu.backend.repository.news.spec.TitleSpecificationProvider;
 import org.cdu.backend.repository.news.spec.TypeSpecificationProvider;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,6 +29,11 @@ public class NewsSpecificationBuilder implements SpecificationBuilder<News> {
             specification = specification.and(specificationProviderManager
                             .getSpecificationProvider(TypeSpecificationProvider.KEY_TYPE)
                             .getSpecification(String.valueOf(searchParameters.type())));
+        }
+        if (searchParameters.title() != null) {
+            specification = specification.and(specificationProviderManager
+                    .getSpecificationProvider(LinkSpecificationProvider.KEY_LINK)
+                    .getSpecification(searchParameters.link()));
         }
         return specification;
     }

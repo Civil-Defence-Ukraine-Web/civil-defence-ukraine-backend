@@ -49,6 +49,7 @@ public class NewsControllerTest {
     private static final String BASIC_URL_ENDPOINT = "/news";
     private static final String SEARCH_PARAM_TITLE = "title";
     private static final String SEARCH_PARAM_TYPE = "type";
+    private static final String SEARCH_PARAM_LINK = "link";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -151,6 +152,7 @@ public class NewsControllerTest {
                         get(BASIC_PUBLIC_URL + BASIC_URL_ENDPOINT + "/search")
                                 .param(SEARCH_PARAM_TITLE, expected.getFirst().title())
                                 .param(SEARCH_PARAM_TYPE, expected.getFirst().type().toString())
+                                .param(SEARCH_PARAM_LINK, expected.getFirst().link())
                                 .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();

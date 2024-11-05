@@ -16,6 +16,7 @@ public class NewsUtil {
             LocalDateTime.parse("2024-09-28T12:00:00");
     public static final String FIRST_NEWS_IMAGE = "image_1.jpg";
     public static final NewsType FIRST_NEWS_TYPE = NewsType.NEWS;
+    public static final String FIRST_NEWS_LINK = "first-news-title";
 
     public static final Long SECOND_NEWS_ID = 2L;
     public static final String SECOND_NEWS_TITLE = "Second news title";
@@ -24,6 +25,7 @@ public class NewsUtil {
             LocalDateTime.parse("2024-09-28T12:00:00");
     public static final String SECOND_NEWS_IMAGE = "image_2.jpg";
     public static final NewsType SECOND_NEWS_TYPE = NewsType.REPORT;
+    public static final String SECOND_NEWS_LINK = "second-news-title";
 
     public static final Long THIRD_NEWS_ID = 3L;
     public static final String THIRD_NEWS_TITLE = "Third news title";
@@ -32,6 +34,7 @@ public class NewsUtil {
             LocalDateTime.parse("2024-09-28T12:00:00");
     public static final String THIRD_NEWS_IMAGE = "image_3.jpg";
     public static final NewsType THIRD_NEWS_TYPE = NewsType.EVENT;
+    public static final String THIRD_NEWS_LINK = "third-news-title";
 
     public static NewsCreateRequestDto createFirstNewsCreateRequestDto() {
         return new NewsCreateRequestDto(FIRST_NEWS_TITLE, FIRST_NEWS_TEXT, FIRST_NEWS_TYPE,
@@ -40,7 +43,7 @@ public class NewsUtil {
 
     public static NewsUpdateRequestDto createUpdateToFirstNewsRequestDto() {
         return new NewsUpdateRequestDto(FIRST_NEWS_TITLE, FIRST_NEWS_TEXT, FIRST_NEWS_TYPE,
-                FIRST_NEWS_PUBLICATION_DATE);
+                FIRST_NEWS_PUBLICATION_DATE, null);
     }
 
     public static News createFirstNews() {
@@ -66,17 +69,18 @@ public class NewsUtil {
 
     public static NewsResponseDto createFirstNewsResponseDto() {
         return new NewsResponseDto(FIRST_NEWS_ID, FIRST_NEWS_TITLE, FIRST_NEWS_TEXT,
-                FIRST_NEWS_IMAGE, FIRST_NEWS_PUBLICATION_DATE, FIRST_NEWS_TYPE);
+                FIRST_NEWS_IMAGE, FIRST_NEWS_PUBLICATION_DATE, FIRST_NEWS_TYPE, FIRST_NEWS_LINK);
     }
 
     public static NewsResponseDto createSecondNewsResponseDto() {
         return new NewsResponseDto(SECOND_NEWS_ID, SECOND_NEWS_TITLE, SECOND_NEWS_TEXT,
-                SECOND_NEWS_IMAGE, SECOND_NEWS_PUBLICATION_DATE, SECOND_NEWS_TYPE);
+                SECOND_NEWS_IMAGE, SECOND_NEWS_PUBLICATION_DATE, SECOND_NEWS_TYPE,
+                SECOND_NEWS_LINK);
     }
 
     public static NewsResponseDto createThirdNewsResponseDto() {
         return new NewsResponseDto(THIRD_NEWS_ID, THIRD_NEWS_TITLE, THIRD_NEWS_TEXT,
-                THIRD_NEWS_IMAGE, THIRD_NEWS_PUBLICATION_DATE, THIRD_NEWS_TYPE);
+                THIRD_NEWS_IMAGE, THIRD_NEWS_PUBLICATION_DATE, THIRD_NEWS_TYPE, THIRD_NEWS_LINK);
     }
 
     public static List<NewsResponseDto> createThreeNewsDtoList() {
