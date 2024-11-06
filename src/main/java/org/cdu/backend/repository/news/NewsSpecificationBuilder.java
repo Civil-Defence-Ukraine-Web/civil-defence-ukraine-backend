@@ -30,7 +30,7 @@ public class NewsSpecificationBuilder implements SpecificationBuilder<News> {
                             .getSpecificationProvider(TypeSpecificationProvider.KEY_TYPE)
                             .getSpecification(String.valueOf(searchParameters.type())));
         }
-        if (searchParameters.title() != null) {
+        if (searchParameters.link() != null) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider(LinkSpecificationProvider.KEY_LINK)
                     .getSpecification(searchParameters.link()));
