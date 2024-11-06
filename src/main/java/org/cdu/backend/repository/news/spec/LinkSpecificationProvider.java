@@ -16,9 +16,8 @@ public class LinkSpecificationProvider implements SpecificationProvider<News> {
 
     @Override
     public Specification<News> getSpecification(String param) {
-        String pattern = SQL_WILDCARD + param + SQL_WILDCARD;
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.like(criteriaBuilder.lower(root.get(KEY_LINK)),
-                        pattern.toLowerCase());
+                        param.toLowerCase());
     }
 }
